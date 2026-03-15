@@ -1,244 +1,280 @@
-# Learning Hub Shop – Concept Document
+# AI-Powered E-Shop Template
 
-# Version 0.1
+Hackathon Project -- buildTHEshop
 
-## 1. Project Overview
+## 1. Overview
 
-The goal of the project is to provide a **lightweight and intuitive marketplace** where users can:
+The goal of this project is to build a modern e-commerce web application
+for weekend challange.
 
-* offer products
-* provide services
-* discover useful learning resources
-* exchange value within the community
+Unlike traditional shop templates that rely only on category navigation
+or keyword search, this project introduces an AI-powered deep product
+search feature. Users can describe what they are looking for in natural
+language, and the AI system suggests relevant products based on intent
+rather than simple keyword matching.
 
-The platform should support both **physical items** (for example merchandise) and **digital or service-based offerings** (for example tutoring sessions or study materials).
+Example:
 
----
+User input: "I need a lightweight laptop for programming and travel
+under €1500."
 
-## 2. Problem Statement
+AI response: - Suggests products matching weight, performance, and price
+criteria - Explains why the products match the request
 
-In many learning communities, students frequently need:
+The system is designed as a scalable and modular web platform, allowing
+easy customization and extension.
 
-* study materials
-* tutoring
-* project collaboration
-* tools or equipment
-* community merchandise
+### Main Goals
 
-However, there is often **no structured platform** that allows students to easily offer or request these resources.
+-   Provide a reusable e-commerce template
+-   Demonstrate AI integration in product discovery
+-   Implement clean architecture suitable for scaling
+-   Provide clear developer documentation and diagrams
 
-The Learning Hub Shop aims to solve this by creating a **centralized community marketplace**.
+------------------------------------------------------------------------
 
----
+# 2. Features
 
-## 3. Target Users
+## Core E-Commerce Features
 
-Primary users of the platform:
+### User Management
 
-* Students in the Learning Hub
-* Peer tutors
-* Project collaborators
-* Community organizers
-
-Possible roles in the system:
-
-* **User**
-* **Seller**
-* **Admin**
-
-A single user may act both as **buyer and seller**.
-
----
-
-## 4. Core Features (MVP)
-
-### User Accounts
-
-Users can:
-
-* register
-* login
-* manage their profile
-
-Profile information may include:
-
-* username
-* contact information
-* reputation / rating
-
----
-
-### Product and Service Listings
-
-Users can create listings for:
-
-* physical products
-* digital resources
-* services
-
-Each listing contains:
-
-* title
-* description
-* category
-* price
-* seller information
-* optional images
-
----
+-   User registration
+-   Login / authentication
+-   User profile
+-   Order history
 
 ### Product Catalog
 
-Users can browse available listings via:
-
-* categories
-* search
-* filtering
-
-Example categories:
-
-* merchandise
-* study materials
-* tutoring
-* digital tools
-* services
-
----
+-   Product listing
+-   Product categories
+-   Product details page
+-   Product images and descriptions
+-   Product availability
 
 ### Shopping Cart
 
-Users can:
+-   Add product to cart
+-   Remove product
+-   Update quantity
+-   Cart persistence
 
-* add items to cart
-* remove items
-* view total price
+### Checkout
 
-The cart represents a temporary collection of items before checkout.
+-   Order creation
+-   Order summary
+-   Payment integration (mock or real)
+-   Order confirmation
 
----
+------------------------------------------------------------------------
 
-### Orders
+## AI Features
 
-Users can place orders for items in their cart.
+### Deep Search (AI Product Discovery)
 
-Order information includes:
+Users can search using natural language queries instead of traditional
+filters.
 
-* buyer
-* seller
-* purchased items
-* price
-* order status
+Example queries:
 
-Possible order states:
+-   "Comfortable running shoes for winter"
+-   "Cheap mechanical keyboard for programming"
+-   "Camera for beginner vloggers"
 
-* created
-* confirmed
-* completed
-* cancelled
+AI processes the query and:
 
----
+1.  Understands intent
+2.  Extracts product requirements
+3.  Searches product database
+4.  Returns ranked suggestions
 
-### Ratings and Reputation
+Possible implementation:
 
-After a completed transaction, users may rate each other.
+-   LLM API (OpenAI / Claude / local model)
+-   Embedding-based semantic search
+-   Hybrid search (filters + vector search)
 
-This helps build **trust inside the community**.
+------------------------------------------------------------------------
 
----
+## Admin Features (Optional for Hackathon)
 
-## 5. Admin Capabilities
+-   Add / edit products
+-   Manage inventory
+-   View orders
+-   Manage categories
 
-Admins can:
+------------------------------------------------------------------------
 
-* manage users
-* remove inappropriate listings
-* moderate the platform
-* view platform activity
+# 3. Core Entities
 
----
+These represent the main domain objects in the system.
 
-## 6. Non-Functional Requirements
+## User
 
-The system should be:
+Represents a registered customer.
 
-* simple to use
-* scalable for future features
-* containerized for easy deployment
-* API-driven
+Attributes:
 
-The architecture should support:
+-   id
+-   name
+-   email
+-   password_hash
+-   created_at
 
-* frontend and backend separation
-* database persistence
-* caching for performance
+Relationships:
 
----
+-   has many Orders
+-   has one Cart
 
-## 7. Potential Future Features
+------------------------------------------------------------------------
 
-Possible extensions beyond MVP:
+## Product
 
-* AI-assisted search
-* recommendation system
-* real-time chat between buyers and sellers
-* notifications
-* digital delivery for resources
-* analytics dashboard
+Represents an item available for purchase.
 
----
+Attributes:
 
-## 8. High-Level System Components
+-   id
+-   name
+-   description
+-   price
+-   category_id
+-   stock_quantity
+-   created_at
 
-The system will consist of several components:
+Relationships:
 
-### Frontend
+-   belongs to Category
 
-Web interface where users interact with the platform.
+------------------------------------------------------------------------
 
-### Backend API
+## Category
 
-Handles business logic, authentication, and data processing.
+Used to organize products.
 
-### Database
+Attributes:
 
-Stores users, listings, orders, and ratings.
+-   id
+-   name
+-   description
 
-### Cache
+Relationships:
 
-Used for performance optimization.
+-   has many Products
 
----
+------------------------------------------------------------------------
 
-## 9. Goals for the Hackathon
+## Cart
 
-During the hackathon, the team aims to deliver:
+Represents a user's shopping cart.
 
-* a working prototype
-* core marketplace functionality
-* a clear and demonstrable user flow
+Attributes:
 
-Example demo scenario:
+-   id
+-   user_id
+-   created_at
+-   updated_at
 
-1. User registers
-2. Seller creates a listing
-3. Buyer browses the catalog
-4. Buyer adds item to cart
-5. Buyer creates an order
-6. Order appears in seller dashboard
+Relationships:
 
----
+-   belongs to User
+-   contains CartItems
 
-## 10. Success Criteria
+------------------------------------------------------------------------
 
-The project will be considered successful if:
+## CartItem
 
-* users can create listings
-* users can browse and purchase items
-* transactions can be tracked
-* the system demonstrates a complete marketplace workflow
+Represents a product inside a cart.
 
-Additionally, the codebase should be:
+Attributes:
 
-* well structured
-* understandable
-* explainable to reviewers
+-   id
+-   cart_id
+-   product_id
+-   quantity
+
+Relationships:
+
+-   belongs to Cart
+-   references Product
+
+------------------------------------------------------------------------
+
+## Order
+
+Represents a completed purchase.
+
+Attributes:
+
+-   id
+-   user_id
+-   total_price
+-   status
+-   created_at
+
+Relationships:
+
+-   belongs to User
+-   contains OrderItems
+
+------------------------------------------------------------------------
+
+## OrderItem
+
+Represents a purchased product inside an order.
+
+Attributes:
+
+-   id
+-   order_id
+-   product_id
+-   quantity
+-   price
+
+Relationships:
+
+-   belongs to Order
+-   references Product
+
+------------------------------------------------------------------------
+
+# 4. AI Search Components
+
+Additional components required for the deep search feature.
+
+## Search Query
+
+Stores user search input.
+
+Attributes:
+
+-   id
+-   user_id
+-   query_text
+-   created_at
+
+------------------------------------------------------------------------
+
+## AI Recommendation Result
+
+Stores AI-generated product suggestions.
+
+Attributes:
+
+-   id
+-   query_id
+-   product_id
+-   score
+-   explanation
+
+------------------------------------------------------------------------
+
+# 5. Future Architecture (Planned)
+
+This document will later be used to design:
+
+-   System architecture diagram
+-   Database ER diagram
+-   API structure
+-   Service interactions
+-   AI search pipeline
