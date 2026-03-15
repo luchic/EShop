@@ -2,24 +2,24 @@
 
 Hackathon Project -- buildTHEshop
 
+## 0. Document Purpose
+
+This document defines the product vision, core scope, and domain concepts.
+
+It is intentionally high-level and stable.
+Detailed architecture, API design, database schema, and AI implementation
+will be documented in separate files later.
+
 ## 1. Overview
 
 The goal of this project is to build a modern e-commerce web application
-for weekend challange.
+for a weekly challenge.
 
 Unlike traditional shop templates that rely only on category navigation
 or keyword search, this project introduces an AI-powered deep product
 search feature. Users can describe what they are looking for in natural
 language, and the AI system suggests relevant products based on intent
 rather than simple keyword matching.
-
-Example:
-
-User input: "I need a lightweight laptop for programming and travel
-under €1500."
-
-AI response: - Suggests products matching weight, performance, and price
-criteria - Explains why the products match the request
 
 The system is designed as a scalable and modular web platform, allowing
 easy customization and extension.
@@ -88,15 +88,10 @@ AI processes the query and:
 3.  Searches product database
 4.  Returns ranked suggestions
 
-Possible implementation:
-
--   LLM API (OpenAI / Claude / local model)
--   Embedding-based semantic search
--   Hybrid search (filters + vector search)
 
 ------------------------------------------------------------------------
 
-## Admin Features (Optional for Hackathon)
+## Administrative Capabilities
 
 -   Add / edit products
 -   Manage inventory
@@ -105,167 +100,28 @@ Possible implementation:
 
 ------------------------------------------------------------------------
 
-# 3. Core Entities
+# 3. Core Domain Model
 
-These represent the main domain objects in the system.
+The system uses these main entities:
 
-## User
+-   **User**: A registered customer who can browse products, maintain a cart, and place orders
+-   **Product**: An item available for purchase, organized within a category
+-   **Category**: An organizational structure for grouping and discovering products
+-   **Cart**: A temporary container for a user's selected items before checkout
+-   **Order**: A completed purchase record containing ordered items and pricing
 
-Represents a registered customer.
-
-Attributes:
-
--   id
--   name
--   email
--   password_hash
--   created_at
-
-Relationships:
-
--   has many Orders
--   has one Cart
+Detailed entity attributes, database schema, and data types will be defined in the Architecture document.
 
 ------------------------------------------------------------------------
 
-## Product
+# 4. AI Search Concepts
 
-Represents an item available for purchase.
+The AI-powered search feature requires these data concepts:
 
-Attributes:
+-   **Search Query**: Captures user natural-language input and context
+-   **AI Recommendation**: Stores AI-generated product suggestions with relevance scoring and explanation
 
--   id
--   name
--   description
--   price
--   category_id
--   stock_quantity
--   created_at
-
-Relationships:
-
--   belongs to Category
-
-------------------------------------------------------------------------
-
-## Category
-
-Used to organize products.
-
-Attributes:
-
--   id
--   name
--   description
-
-Relationships:
-
--   has many Products
-
-------------------------------------------------------------------------
-
-## Cart
-
-Represents a user's shopping cart.
-
-Attributes:
-
--   id
--   user_id
--   created_at
--   updated_at
-
-Relationships:
-
--   belongs to User
--   contains CartItems
-
-------------------------------------------------------------------------
-
-## CartItem
-
-Represents a product inside a cart.
-
-Attributes:
-
--   id
--   cart_id
--   product_id
--   quantity
-
-Relationships:
-
--   belongs to Cart
--   references Product
-
-------------------------------------------------------------------------
-
-## Order
-
-Represents a completed purchase.
-
-Attributes:
-
--   id
--   user_id
--   total_price
--   status
--   created_at
-
-Relationships:
-
--   belongs to User
--   contains OrderItems
-
-------------------------------------------------------------------------
-
-## OrderItem
-
-Represents a purchased product inside an order.
-
-Attributes:
-
--   id
--   order_id
--   product_id
--   quantity
--   price
-
-Relationships:
-
--   belongs to Order
--   references Product
-
-------------------------------------------------------------------------
-
-# 4. AI Search Components
-
-Additional components required for the deep search feature.
-
-## Search Query
-
-Stores user search input.
-
-Attributes:
-
--   id
--   user_id
--   query_text
--   created_at
-
-------------------------------------------------------------------------
-
-## AI Recommendation Result
-
-Stores AI-generated product suggestions.
-
-Attributes:
-
--   id
--   query_id
--   product_id
--   score
--   explanation
+Implementation details such as storage, indexing, and ranking algorithms will be defined in the AI Search Design document.
 
 ------------------------------------------------------------------------
 
