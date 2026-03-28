@@ -3,7 +3,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 8vh;
+  max-height: 15vw;
   background: #222;
   color: #fff;
   display: flex;
@@ -16,4 +17,45 @@
 body.with-banner {
   margin: 0;
   padding-top: 60px;
+}
+
+.banner-padding {
+	width: 10vw;
+}
+	
+.user-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	max-height: 4vh;
+}
+.catalog-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+
+    color: white;
+    background-color: #210;
+    border: 1px solid antiquewhite;
+    border-radius: 2px;
+
+    height: 5vh;
+	max-width: 10vw;
+}
+.user-button {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+
+    color: white;
+    background-color: #210;
+    border: 1px solid antiquewhite;
+    border-radius: 2px;
+
+    height: 5vh;
+    max-height: 10vw;
 }
