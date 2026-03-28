@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/user/login": {
+    "/user/42/login": {
       "get": {
         "summary": "Start login with 42 intra",
         "responses": {
@@ -98,6 +98,37 @@
         }
       }
     },
+    "/itmes/{id}": {
+      "get": {
+        "summary": "Get product by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
     "/itmes/add": {
       "post": {
         "summary": "Add product",
@@ -114,6 +145,37 @@
         "responses": {
           "200": {
             "description": "Product added"
+          }
+        }
+      }
+    },
+    "/mony/user/{id}": {
+      "get": {
+        "summary": "Get user balance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User balance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserBalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
           }
         }
       }
@@ -144,6 +206,9 @@
           },
           "email": {
             "type": "string"
+          },
+          "balance": {
+            "type": "integer"
           }
         }
       },
@@ -207,6 +272,18 @@
             "type": "integer"
           },
           "limit": {
+            "type": "integer"
+          }
+        }
+      },
+      "UserBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "balance": {
             "type": "integer"
           }
         }
