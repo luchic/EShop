@@ -59,6 +59,20 @@ services:
     networks:
       - theshop-net
 
+  frontend:
+    image: nginx:alpine
+    container_name: shop-frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      backend:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - theshop-net
+
   adminer:
     image: adminer:4
     container_name: shop-adminer
