@@ -42,6 +42,16 @@ func (r *MemoryRepository) GetGoodPage(offset int, limit int) []goods.Product {
 	return r.items[offset:end]
 }
 
+func (r *MemoryRepository) GetGoodByID(id uint64) (goods.Product, bool) {
+	for _, product := range r.items {
+		if product.Id == id {
+			return product, true
+		}
+	}
+
+	return goods.Product{}, false
+}
+
 func (r *MemoryRepository) SaveOAuthState(state string) error {
 	r.oauthStates[state] = struct{}{}
 	return nil

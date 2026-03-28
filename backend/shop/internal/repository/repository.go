@@ -7,6 +7,7 @@ import (
 
 type Repository interface {
 	GetGoodPage(offset int, limit int) []goods.Product
+	GetGoodByID(id uint64) (goods.Product, bool)
 	AddProduct(product goods.AddProductRequest)
 	SaveOAuthState(state string) error
 	HasOAuthState(state string) bool

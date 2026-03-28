@@ -80,6 +80,24 @@ func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product 
 	return products
 }
 
+func (r *PostgresRepository) GetGoodByID(id uint64) (goods.Product, bool) {
+	var product goods.Product
+	err := r.db.QueryRow(
+		`SELECT id, name, description
+		FROM products
+		WHERE id = $1`,
+		id,
+	).Scan(&product.Id, &product.Name, &product.Description)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			slog.Error("get product by id failed", slog.Any("err", err), slog.Uint64("id", id))
+		}
+		return goods.Product{}, false
+	}
+
+	return product, true
+}
+
 func (r *PostgresRepository) SaveOAuthState(state string) error {
 	_, err := r.db.Exec(
 		`INSERT INTO oauth_states (state)

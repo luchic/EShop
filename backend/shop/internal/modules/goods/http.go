@@ -21,6 +21,7 @@ func Routers(mux *http.ServeMux, repo repository.Repository) *http.ServeMux {
 	handlers := NewHandlers(repo)
 	mux.HandleFunc("/itmes", handlers.handleGetAllProducts)
 	mux.HandleFunc("/itmes/add", handlers.handleAddProduct)
+	mux.HandleFunc("/itmes/{id}", handlers.handleGetProductByID)
 	return mux
 }
 
@@ -97,4 +98,36 @@ func (h *Handlers) handleAddProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	h.repo.AddProduct(request)
 	slog.Info("handle add product operation is finished\n")
+}
+
+func (h *Handlers) handleGetProductByID(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	idValue := r.PathValue("id")
+	if idValue == "" {
+		http.Error(w, "Missing product id", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.ParseUint(idValue, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid product id", http.StatusBadRequest)
+		return
+	}
+
+	product, ok := h.repo.GetGoodByID(id)
+	if !ok {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(product); err != nil {
+		slog.Error("Failed to encode product", slog.Any("err", err))
+		http.Error(w, "Couldn't encode data", http.StatusInternalServerError)
+		return
+	}
 }
