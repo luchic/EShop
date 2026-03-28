@@ -63,7 +63,7 @@ func (h *Handlers) handleGetAllProducts(w http.ResponseWriter, r *http.Request) 
 		limit = value
 	}
 	offset := (page - 1) * limit
-	products := h.repo.GetGoodPage(offset, limit)
+	products := h.repo.GetProductPage(offset, limit)
 
 	pageResponse := goods.PaginatedResponse{
 		Items: products,
@@ -132,7 +132,7 @@ func (h *Handlers) handleGetProductByID(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	product, ok := h.repo.GetGoodByID(id)
+	product, ok := h.repo.GetProductByID(id)
 	if !ok {
 		http.Error(w, "Product not found", http.StatusNotFound)
 		return

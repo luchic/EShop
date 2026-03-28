@@ -51,7 +51,6 @@ func Routers(mux *http.ServeMux, repo repository.Repository, cfg config.Config) 
 	handlers := NewHandlers(repo, cfg)
 	mux.HandleFunc("/auth/42/login", handlers.handleLogin)
 	mux.HandleFunc("/auth/42/callback", handlers.handleCallback)
-	mux.HandleFunc("/user/login", handlers.handleLogin)
 	return mux
 }
 

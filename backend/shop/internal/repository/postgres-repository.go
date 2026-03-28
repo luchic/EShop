@@ -63,7 +63,7 @@ func (r *PostgresRepository) AddProduct(product goods.AddProductRequest) (goods.
 	return response, nil
 }
 
-func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product {
+func (r *PostgresRepository) GetProductPage(offset int, limit int) []goods.Product {
 	rows, err := r.db.Query(
 		`SELECT id, name, price, logo, description
 		FROM products
@@ -99,7 +99,7 @@ func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product 
 	return products
 }
 
-func (r *PostgresRepository) GetGoodByID(id uint64) (goods.Product, bool) {
+func (r *PostgresRepository) GetProductByID(id uint64) (goods.Product, bool) {
 	var product goods.Product
 	err := r.db.QueryRow(
 		`SELECT id, name, price, logo, description
