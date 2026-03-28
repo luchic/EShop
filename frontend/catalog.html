@@ -6,35 +6,50 @@
         <link rel="stylesheet" href="catalog_style.css">
         <link rel="stylesheet" href="styles.css">
         <script src="./catalog_script.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Jacquard+24&display=swap" rel="stylesheet">
     </head>
-    <body class="with-banner">
+    <body class="with-banner" onload="SetItems()">
         <header class="banner"></header>
         <main>
             <p>fjhdjkfh</p>
             <div class="grid-container">
-                <div class="grid-item" onclick="ShowDescription(this)" id="item_0">
+                <div class="grid-item" onclick="ShowDescription(this)" id="item_0" style="grid-column: 1; grid-row: 1;">
                     <img class="grid-item__image" src="blahaj.jpg" alt="Alt text">
                     <div class="grid-item__content">
                         <h3 class="grid-item__title">Title here</h3>
                     </div>
                 </div>
-                <div class="grid-item" onclick="ShowDescription(this)" id="item_1">
+                <div class="grid-item" onclick="ShowDescription(this)" id="item_1" style="grid-column: 2; grid-row: 1">
                     <img class="grid-item__image" src="blahaj.jpg" alt="Alt text">
                     <div class="grid-item__content">
                         <h3 class="grid-item__title">Title here</h3>
                     </div>
                 </div>
-                <div class="grid-item" onclick="ShowDescription(this)" id="item_2">
+                <div class="grid-item" onclick="ShowDescription(this)" id="item_2" style="grid-column: 1; grid-row: 2">
                     <img class="grid-item__image" src="blahaj.jpg" alt="Alt text">
                     <div class="grid-item__content">
                         <h3 class="grid-item__title">Title here</h3>
                     </div>
                 </div>
-                <div class="grid-item" onclick="ShowDescription(this)" id="item_3">
+                <div class="grid-item" onclick="ShowDescription(this)" id="item_3" style="grid-column: 2; grid-row: 2;">
                     <img class="grid-item__image" src="blahaj.jpg" alt="Alt text">
                     <div class="grid-item__content">
                         <h3 class="grid-item__title">Title here</h3>
                     </div>
+                </div>
+                <div class="arrows" style="transform: translate(750%, 325%);" onclick="TurnRightPage()">
+                    <img src="./arrow.png", alt="RightArrow" id="RightArrow"> 
+                </div>
+                <div class="arrows" style="transform: translate(-750%, 325%);" onclick="TurnLeftPage()">
+                    <img src="./arrow_left.png" alt="LeftArrow" id="LeftArrow">
+                </div>
+                <div class="pagenums" style="transform: translate(-600%, -450%);">
+                    <p id="pagenum_1" style="text-align: center; font-size: 60px;" class="jacquard-24-regular"></p>
+                </div>
+                <div class="pagenums" style="transform: translate(600%, -450%);">
+                    <p id="pagenum_2" style="text-align: center; font-size: 60px;" class="jacquard-24-regular"></p>
                 </div>
             </div>
             <div id="overlay" onclick="CloseDescription()">

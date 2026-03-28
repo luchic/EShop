@@ -1,5 +1,6 @@
 .grid-container {
     display: grid;
+    position: relative;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 275px);
     gap: 50px;
@@ -8,7 +9,6 @@
 }
 
 .grid-item {
-  background-color: #cc9966;
   color: rgb(0, 0, 0);
   display: flex;
   flex-direction: column;
@@ -70,3 +70,27 @@
       min-width: 200px;
       text-align: center;
     }
+
+.arrows {
+  grid-column: 1 / 3; /* spans from column 1 to 2 (covers both columns) */
+  grid-row: 1 / 2;    /* spans both rows */
+  justify-self: center;
+  align-self: center;
+  width: 50px;
+  height: 50px;
+}
+
+.pagenums {
+  grid-column: 1 / 3; /* spans from column 1 to 2 (covers both columns) */
+  grid-row: 1 / 2;    /* spans both rows */
+  justify-self: center;
+  align-self: center;
+  width: 50px;
+  height: 55px;
+}
+
+.jacquard-24-regular {
+  font-family: "Jacquard 24", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
