@@ -2,8 +2,10 @@ package main
 
 import (
 	"backend/shop/internal/config"
-	"backend/shop/internal/modules/goods"
+	"backend/shop/internal/modules/auth"
 	"backend/shop/internal/modules/finance"
+	"backend/shop/internal/modules/goods"
+	"backend/shop/internal/modules/swagger"
 	"backend/shop/internal/repository"
 	"context"
 	"log/slog"
@@ -25,6 +27,8 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	mux = swagger.Routers(mux)
+	mux = auth.Routers(mux, repo, cfg)
 	mux = goods.Routers(mux, repo)
 	mux = finance.Routers(mux, repo)
 
