@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/user/42/login": {
+    "/auth/42/login": {
       "get": {
         "summary": "Start login with 42 intra",
         "responses": {

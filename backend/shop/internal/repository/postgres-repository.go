@@ -157,7 +157,8 @@ func (r *PostgresRepository) RegisterTransaction(request financeapi.RegisterTran
 		return financeapi.Transaction{}, err
 	}
 
-	transaction, err := r.createTransaction(tx, request.UserID, request.ProductID, price)
+	transaction, err := r.createTransaction(tx, request.UserID,
+		request.ProductID, request.Price)
 	if err != nil {
 		return financeapi.Transaction{}, err
 	}
