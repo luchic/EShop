@@ -10,6 +10,16 @@ func NewMemoryRepository(items []goods.Product) *MemoryRepository {
 	return &MemoryRepository{items: items}
 }
 
+func (r *MemoryRepository) AddProduct(product goods.AddProductRequest) {
+	lastId := r.items[len(r.items)-1].Id + 1
+	repositoryProduct := goods.Product{
+		Id: lastId,
+		Name: product.Name,
+		Description: product.Description,
+	}
+	r.items = append(r.items, repositoryProduct)
+}	
+
 func (r *MemoryRepository) GetGoodPage(offset int, limit int) []goods.Product {
 	if offset >= len(r.items) {
 		return []goods.Product{}
