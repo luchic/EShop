@@ -25,11 +25,33 @@ func Routers(mux *http.ServeMux, repo repository.Repository) *http.ServeMux {
 	}
 
 	handlers := NewHandlers(repo)
+	mux.HandleFunc("/mony/user", handlers.handleUpdateUserBalance)
 	mux.HandleFunc("/mony/user/{id}", handlers.handleGetUserBalance)
 	mux.HandleFunc("/transaction/register", handlers.handleRegisterTransaction)
 	mux.HandleFunc("/transaction/user/{id}", handlers.handleGetTransactionsByUserID)
 	mux.HandleFunc("/transaction/{id}", handlers.handleGetTransactionByID)
 	return mux
+}
+
+func (h *Handlers) handleUpdateUserBalance(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		writeError(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var request financeapi.UpdateUserBalanceRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		writeError(w, "Couldn't decode json body", http.StatusBadRequest)
+		return
+	}
+
+	response, err := h.repo.UpdateUserBalance(request)
+	if err != nil {
+		writeRepositoryError(w, err, "Couldn't update user balance")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, response)
 }
 
 func (h *Handlers) handleGetUserBalance(w http.ResponseWriter, r *http.Request) {

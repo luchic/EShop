@@ -11,6 +11,7 @@ type Repository interface {
 	GetProductByID(id uint64) (goods.Product, bool)
 	AddProduct(product goods.AddProductRequest) (goods.AddProductResponse, error)
 	GetUserBalance(userID int64) (financeapi.UserBalanceResponse, bool)
+	UpdateUserBalance(request financeapi.UpdateUserBalanceRequest) (financeapi.UserBalanceResponse, error)
 	RegisterTransaction(request financeapi.RegisterTransactionRequest) (financeapi.Transaction, error)
 	GetTransactionByID(id int64) (financeapi.Transaction, bool)
 	GetTransactionsByUserID(userID int64) ([]financeapi.Transaction, error)

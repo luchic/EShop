@@ -180,6 +180,36 @@
         }
       }
     },
+    "/mony/user": {
+      "put": {
+        "summary": "Add money to user balance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBalanceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User balance updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserBalanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/transaction/register": {
       "post": {
         "summary": "Register a new transaction",
@@ -382,6 +412,19 @@
             "type": "integer"
           }
         }
+      },
+      "UpdateUserBalanceRequest": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "summ": {
+            "type": "integer"
+          }
+        },
+        "required": ["user_id", "summ"]
       },
       "RegisterTransactionRequest": {
         "type": "object",

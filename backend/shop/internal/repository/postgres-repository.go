@@ -135,6 +135,35 @@ func (r *PostgresRepository) GetUserBalance(userID int64) (financeapi.UserBalanc
 	return response, true
 }
 
+func (r *PostgresRepository) UpdateUserBalance(request financeapi.UpdateUserBalanceRequest) (financeapi.UserBalanceResponse, error) {
+	tx, err := r.db.BeginTx(r.context, nil)
+	if err != nil {
+		slog.Error("begin update user balance failed", slog.Any("err", err))
+		return financeapi.UserBalanceResponse{}, err
+	}
+	defer tx.Rollback()
+
+	balance, err := r.getUserBalanceForUpdate(tx, request.UserID)
+	if err != nil {
+		return financeapi.UserBalanceResponse{}, err
+	}
+
+	newBalance := balance + request.Summ
+	if err := r.updateUserBalance(tx, request.UserID, newBalance); err != nil {
+		return financeapi.UserBalanceResponse{}, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		slog.Error("commit update user balance failed", slog.Any("err", err), slog.Int64("user_id", request.UserID))
+		return financeapi.UserBalanceResponse{}, err
+	}
+
+	return financeapi.UserBalanceResponse{
+		UserID:  request.UserID,
+		Balance: newBalance,
+	}, nil
+}
+
 func (r *PostgresRepository) RegisterTransaction(request financeapi.RegisterTransactionRequest) (financeapi.Transaction, error) {
 	tx, err := r.db.BeginTx(r.context, nil)
 	if err != nil {

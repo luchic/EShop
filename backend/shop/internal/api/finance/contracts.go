@@ -7,6 +7,11 @@ type UserBalanceResponse struct {
 	Balance int   `json:"balance"`
 }
 
+type UpdateUserBalanceRequest struct {
+	UserID int64 `json:"user_id"`
+	Summ   int   `json:"summ"`
+}
+
 type RegisterTransactionRequest struct {
 	UserID    int64 `json:"user_id"`
 	ProductID int64 `json:"product_id"`
