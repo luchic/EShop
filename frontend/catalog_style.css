@@ -2,8 +2,8 @@
     display: grid;
     position: relative;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 275px);
-    gap: 50px;
+    grid-template-rows: repeat(2, 250px);
+    gap: 25px;
     max-width: 650px;
     margin: 100px auto;
 }
@@ -100,4 +100,23 @@
   font-family: "Jacquard 24", system-ui;
   font-weight: 400;
   font-style: normal;
+}
+
+body {
+  margin: 0;
+}
+
+.bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+
+  width: 100vw;
+  height: 100vh;
+
+  transform: translate(-50%, -50%);
+
+  background: url(countertop.png) center / cover no-repeat;
+
+  z-index: -1;
 }
