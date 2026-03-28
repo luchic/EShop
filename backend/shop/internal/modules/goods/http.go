@@ -14,9 +14,11 @@ type Handlers struct {
 	repo repository.Repository
 }
 
-func Routers(repo repository.Repository) *http.ServeMux {
+func Routers(mux *http.ServeMux, repo repository.Repository) *http.ServeMux {
+	if mux == nil {
+		return mux
+	}
 	handlers := NewHandlers(repo)
-	mux := http.NewServeMux()
 	mux.HandleFunc("/itmes", handlers.handleGetAllProducts)
 	mux.HandleFunc("/itmes/add", handlers.handleAddProduct)
 	return mux
