@@ -11,6 +11,7 @@ import (
 )
 
 type PostgresRepository struct {
+	context context.Context
 	db *sql.DB
 }
 
@@ -26,6 +27,7 @@ func NewPostgresRepository(ctx context.Context, cfg config.Config) (*PostgresRep
 	}
 
 	return &PostgresRepository{
+		context: ctx,
 		db: db,
 	}, nil
 }
