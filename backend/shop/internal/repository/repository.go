@@ -2,6 +2,7 @@ package repository
 
 import (
 	authapi "backend/shop/internal/api/auth"
+	financeapi "backend/shop/internal/api/finance"
 	"backend/shop/internal/api/goods"
 )
 
@@ -9,6 +10,7 @@ type Repository interface {
 	GetGoodPage(offset int, limit int) []goods.Product
 	GetGoodByID(id uint64) (goods.Product, bool)
 	AddProduct(product goods.AddProductRequest)
+	GetUserBalance(userID int64) (financeapi.UserBalanceResponse, bool)
 	SaveOAuthState(state string) error
 	HasOAuthState(state string) bool
 	DeleteOAuthState(state string) error

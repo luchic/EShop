@@ -2,6 +2,7 @@ package repository
 
 import (
 	authapi "backend/shop/internal/api/auth"
+	financeapi "backend/shop/internal/api/finance"
 	"backend/shop/internal/api/goods"
 	"backend/shop/internal/config"
 	"context"
@@ -96,6 +97,24 @@ func (r *PostgresRepository) GetGoodByID(id uint64) (goods.Product, bool) {
 	}
 
 	return product, true
+}
+
+func (r *PostgresRepository) GetUserBalance(userID int64) (financeapi.UserBalanceResponse, bool) {
+	var response financeapi.UserBalanceResponse
+	err := r.db.QueryRow(
+		`SELECT id, balance
+		FROM users
+		WHERE id = $1`,
+		userID,
+	).Scan(&response.UserID, &response.Balance)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			slog.Error("get user balance failed", slog.Any("err", err), slog.Int64("user_id", userID))
+		}
+		return financeapi.UserBalanceResponse{}, false
+	}
+
+	return response, true
 }
 
 func (r *PostgresRepository) SaveOAuthState(state string) error {
