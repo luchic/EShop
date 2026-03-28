@@ -34,20 +34,30 @@ func NewPostgresRepository(ctx context.Context, cfg config.Config) (*PostgresRep
 	}, nil
 }
 
-func (r *PostgresRepository) AddProduct(product goods.AddProductRequest) {
-	_, err := r.db.Exec(
-		`INSERT INTO products (name, description) VALUES ($1, $2)`,
+func (r *PostgresRepository) AddProduct(product goods.AddProductRequest) (goods.AddProductResponse, error) {
+	row := r.db.QueryRow(
+		`INSERT INTO products (name, logo, price, description)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id, name`,
 		product.Name,
+		product.Logo,
+		product.Price,
 		product.Description,
 	)
+
+	var response goods.AddProductResponse
+	err := row.Scan(&response.Id, &response.Name)
 	if err != nil {
 		slog.Error("add product failed", slog.Any("err", err))
+		return goods.AddProductResponse{}, err
 	}
+
+	return response, nil
 }
 
 func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product {
 	rows, err := r.db.Query(
-		`SELECT id, name, description
+		`SELECT id, name, price, logo, description
 		FROM products
 		ORDER BY id
 		OFFSET $1
@@ -64,7 +74,7 @@ func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product 
 	products := make([]goods.Product, 0, limit)
 	for rows.Next() {
 		var product goods.Product
-		err := rows.Scan(&product.Id, &product.Name, &product.Description)
+		err := rows.Scan(&product.Id, &product.Name, &product.Price, &product.Logo, &product.Description)
 		if err != nil {
 			slog.Error("scan product failed", slog.Any("err", err))
 			return []goods.Product{}
@@ -84,11 +94,11 @@ func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product 
 func (r *PostgresRepository) GetGoodByID(id uint64) (goods.Product, bool) {
 	var product goods.Product
 	err := r.db.QueryRow(
-		`SELECT id, name, description
+		`SELECT id, name, price, logo, description
 		FROM products
 		WHERE id = $1`,
 		id,
-	).Scan(&product.Id, &product.Name, &product.Description)
+	).Scan(&product.Id, &product.Name, &product.Price, &product.Logo, &product.Description)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			slog.Error("get product by id failed", slog.Any("err", err), slog.Uint64("id", id))

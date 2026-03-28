@@ -96,7 +96,21 @@ func (h *Handlers) handleAddProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Couldn't decode json body", http.StatusBadRequest)
 		return
 	}
-	h.repo.AddProduct(request)
+	response, err := h.repo.AddProduct(request)
+	if err != nil {
+		slog.Error("handle add product operation: Couldn't save product\n", slog.Any("err", err))
+		http.Error(w, "Couldn't save product", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		slog.Error("handle add product operation: Couldn't encode response\n", slog.Any("err", err))
+		http.Error(w, "Couldn't encode response", http.StatusInternalServerError)
+		return
+	}
 	slog.Info("handle add product operation is finished\n")
 }
 
