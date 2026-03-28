@@ -6,8 +6,13 @@ type Product struct {
 	Description string `json:"description"`
 }
 
+type AddProductRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
 type PaginatedResponse struct {
-	Items      []Product `json:"items"`
-	Page       int       `json:"page"`
-	Limit      int       `json:"limit"`
+	Items []Product `json:"items"`
+	Page  int       `json:"page"`
+	Limit int       `json:"limit"`
 }

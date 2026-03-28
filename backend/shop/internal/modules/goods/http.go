@@ -4,6 +4,7 @@ import (
 	"backend/shop/internal/api/goods"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strconv"
 )
@@ -45,7 +46,7 @@ func (h *Handlers) handleGetAllProducts(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
+	slog.Info("Hanele getting all products\n")
 	page := 1
 	limit := 4
 
@@ -68,14 +69,29 @@ func (h *Handlers) handleGetAllProducts(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(pageResponse)
 	if err != nil {
+		slog.Error("Failed to encode products\n")
 		http.Error(w, "Couldn't endcode data", http.StatusBadRequest)
 		return
 	}
+	slog.Info("Hanele getting all products operation is finished\n")
 }
 
 func (h *Handlers) handleAddProduct(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	slog.Info("handle add product operation\n")
+
+	if r.Method != http.MethodPost {
+		slog.Error("handle add product operation: Method not allowed\n")
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	var request goods.AddProductRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		slog.Error("handle add product operation: Couldn't decode json body\n")
+		http.Error(w, "Couldn't decode json body", http.StatusBadRequest)
+		return
+	}
+	h.repo.AddProduct(request)
+	slog.Info("handle add product operation is finished\n")
 }
