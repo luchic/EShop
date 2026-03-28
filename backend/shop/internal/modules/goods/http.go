@@ -50,11 +50,11 @@ func (h *Handlers) handleGetAllProducts(w http.ResponseWriter, r *http.Request) 
 	limit := 4
 
 	value, err := getIntQuery(r, "page")
-	if err != nil && value > 1 {
+	if err == nil && value > 1 {
 		page = value
 	}
 	value, err = getIntQuery(r, "limit")
-	if err != nil && value > 1 {
+	if err == nil && value > 1 {
 		limit = value
 	}
 	offset := (page - 1) * limit
