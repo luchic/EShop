@@ -1,6 +1,7 @@
 package repository
 
 import (
+	authapi "backend/shop/internal/api/auth"
 	"backend/shop/internal/api/goods"
 	"backend/shop/internal/config"
 	"context"
@@ -12,7 +13,7 @@ import (
 
 type PostgresRepository struct {
 	context context.Context
-	db *sql.DB
+	db      *sql.DB
 }
 
 func NewPostgresRepository(ctx context.Context, cfg config.Config) (*PostgresRepository, error) {
@@ -28,7 +29,7 @@ func NewPostgresRepository(ctx context.Context, cfg config.Config) (*PostgresRep
 
 	return &PostgresRepository{
 		context: ctx,
-		db: db,
+		db:      db,
 	}, nil
 }
 
@@ -77,4 +78,80 @@ func (r *PostgresRepository) GetGoodPage(offset int, limit int) []goods.Product 
 	}
 
 	return products
+}
+
+func (r *PostgresRepository) SaveOAuthState(state string) error {
+	_, err := r.db.Exec(
+		`INSERT INTO oauth_states (state)
+		VALUES ($1)`,
+		state,
+	)
+	if err != nil {
+		slog.Error("save oauth state failed", slog.Any("err", err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *PostgresRepository) HasOAuthState(state string) bool {
+	var exists bool
+	err := r.db.QueryRow(
+		`SELECT EXISTS (
+			SELECT 1
+			FROM oauth_states
+			WHERE state = $1
+		)`,
+		state,
+	).Scan(&exists)
+	if err != nil {
+		slog.Error("check oauth state failed", slog.Any("err", err))
+		return false
+	}
+
+	return exists
+}
+
+func (r *PostgresRepository) DeleteOAuthState(state string) error {
+	_, err := r.db.Exec(
+		`DELETE FROM oauth_states
+		WHERE state = $1`,
+		state,
+	)
+	if err != nil {
+		slog.Error("delete oauth state failed", slog.Any("err", err))
+		return err
+	}
+
+	return nil
+}
+
+func (r *PostgresRepository) UpsertOAuthUser(user authapi.OAuthUser) (authapi.AppUser, error) {
+	row := r.db.QueryRow(
+		`INSERT INTO users (provider_id, login, display_name, email)
+		VALUES ($1, $2, $3, $4)
+		ON CONFLICT (provider_id) DO UPDATE SET
+			login = EXCLUDED.login,
+			display_name = EXCLUDED.display_name,
+			email = EXCLUDED.email
+		RETURNING id, login, display_name, email`,
+		user.ProviderID,
+		user.Login,
+		user.DisplayName,
+		user.Email,
+	)
+
+	var appUser authapi.AppUser
+	err := row.Scan(
+		&appUser.ID,
+		&appUser.Login,
+		&appUser.DisplayName,
+		&appUser.Email,
+	)
+	if err != nil {
+		slog.Error("upsert oauth user failed", slog.Any("err", err))
+		return authapi.AppUser{}, err
+	}
+
+	return appUser, nil
 }
