@@ -2,6 +2,7 @@ package goods
 
 import (
 	"backend/shop/internal/api/goods"
+	"backend/shop/internal/repository"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -10,10 +11,10 @@ import (
 )
 
 type Handlers struct {
-	repo Repository
+	repo repository.Repository
 }
 
-func Routers(repo Repository) *http.ServeMux {
+func Routers(repo repository.Repository) *http.ServeMux {
 	handlers := NewHandlers(repo)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/itmes", handlers.handleGetAllProducts)
@@ -21,7 +22,7 @@ func Routers(repo Repository) *http.ServeMux {
 	return mux
 }
 
-func NewHandlers(repo Repository) *Handlers {
+func NewHandlers(repo repository.Repository) *Handlers {
 	return &Handlers{
 		repo: repo,
 	}

@@ -1,4 +1,4 @@
-package goods
+package repository
 
 import "backend/shop/internal/api/goods"
 
