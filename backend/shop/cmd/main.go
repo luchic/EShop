@@ -1,34 +1,36 @@
 package main
 
 import (
-	apiGood "backend/shop/internal/api/goods"
+	"backend/shop/internal/config"
 	"backend/shop/internal/modules/goods"
-	"fmt"
-	"log"
+	"backend/shop/internal/modules/finance"
+	"backend/shop/internal/repository"
+	"context"
+	"log/slog"
 	"net/http"
 )
 
 func main() {
-	// cfg, err := config.Load()
-	// if err != nil {
-	// 	log.Printf("load config: %v", err)
-	// }
-	// _ = cfg
-
-	repo := goods.NewMemoryRepository([]apiGood.Product{
-		{Id: 1, Name: "Phone", Description: "Smartphone"},
-		{Id: 2, Name: "Keyboard", Description: "Mechanical keyboard"},
-		{Id: 3, Name: "Mouse", Description: "Wireless mouse"},
-		{Id: 4, Name: "Monitor", Description: "27 inch monitor"},
-		{Id: 5, Name: "Printer", Description: "27 inch monitor"},
-		{Id: 6, Name: "Laptop", Description: "27 inch monitor"},
-		{Id: 7, Name: "PC", Description: "27 inch monitor"},
-	})
-
-	mux := goods.Routers(repo)
-	fmt.Printf("Run server...")
-	err := http.ListenAndServe(":8080", mux)
+	cfg, err := config.Load()
 	if err != nil {
-		log.Printf("Couldn't run server: %v", err)
+		slog.Error("Couldn't load config", slog.Any("err", err))
+		return
+	}
+	ctx := context.Background()
+
+	repo, err := repository.NewPostgresRepository(ctx, cfg)
+	if err != nil {
+		slog.Error("Couldn't load repository", slog.Any("err", err))
+		return
+	}
+
+	mux := http.NewServeMux()
+	mux = goods.Routers(mux, repo)
+	mux = finance.Routers(mux, repo)
+
+	slog.Info("Run server...\n")
+	err = http.ListenAndServe(":8080", mux)
+	if err != nil {
+		slog.Error("Couldn't run server", slog.Any("err", err))
 	}
 }
