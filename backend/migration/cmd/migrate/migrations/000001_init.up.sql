@@ -13,5 +13,6 @@ CREATE TABLE IF NOT EXISTS users (
     provider_id BIGINT NOT NULL UNIQUE,
     login TEXT NOT NULL,
     display_name TEXT NOT NULL,
-    email TEXT NOT NULL
+    email TEXT NOT NULL,
+    balance INT NOT NULL DEFAULT 0
 );

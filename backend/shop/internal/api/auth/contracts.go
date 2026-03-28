@@ -16,6 +16,7 @@ type AppUser struct {
 	Login       string `json:"login"`
 	DisplayName string `json:"display_name"`
 	Email       string `json:"email"`
+	Balance     int    `json:"balance"`
 }
 
 type OAuthState struct {

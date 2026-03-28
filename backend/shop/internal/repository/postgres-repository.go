@@ -146,13 +146,13 @@ func (r *PostgresRepository) DeleteOAuthState(state string) error {
 
 func (r *PostgresRepository) UpsertOAuthUser(user authapi.OAuthUser) (authapi.AppUser, error) {
 	row := r.db.QueryRow(
-		`INSERT INTO users (provider_id, login, display_name, email)
-		VALUES ($1, $2, $3, $4)
+		`INSERT INTO users (provider_id, login, display_name, email, balance)
+		VALUES ($1, $2, $3, $4, 0)
 		ON CONFLICT (provider_id) DO UPDATE SET
 			login = EXCLUDED.login,
 			display_name = EXCLUDED.display_name,
 			email = EXCLUDED.email
-		RETURNING id, login, display_name, email`,
+		RETURNING id, login, display_name, email, balance`,
 		user.ProviderID,
 		user.Login,
 		user.DisplayName,
@@ -165,6 +165,7 @@ func (r *PostgresRepository) UpsertOAuthUser(user authapi.OAuthUser) (authapi.Ap
 		&appUser.Login,
 		&appUser.DisplayName,
 		&appUser.Email,
+		&appUser.Balance,
 	)
 	if err != nil {
 		slog.Error("upsert oauth user failed", slog.Any("err", err))
