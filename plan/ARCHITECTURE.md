@@ -104,14 +104,14 @@ and admin actions)  | Prevent invalid/duplicate buys   |
 ### Get finance
 
 * `POST /transaction/register`
+* `GET /transaction/user/{id}`
 * `GET /transaction/{id}`
-* `GET /mony/user/{id}`
-* `GET /mony`
 
 ### Get user
 * `GET /user/register`
 * `GET /user/login`
 * `GET /user/{name}`
+
 
 ### Current implemented endpoints
 
@@ -122,6 +122,10 @@ and admin actions)  | Prevent invalid/duplicate buys   |
 
 #### Finance
 * `GET /mony/user/{id}`
+* `UPDATE /mony/user`
+* `POST /transaction/register`
+* `GET /transaction/user/{id}`
+* `GET /transaction/{id}`
 
 #### Auth / User
 * `GET /auth/42/login`
