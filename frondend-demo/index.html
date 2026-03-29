@@ -30,8 +30,7 @@
     /* ── BACKGROUND ── */
     #bg {
       position: fixed; inset: 0;
-      background: url('shop_bg_rectext.png') center center / 100% auto no-repeat;
-      /* background-size: 300px 100px; */
+      background: url('shop_bg_rectext.png') center center / 290% no-repeat;
       image-rendering: pixelated;
       z-index: 0;
     }
@@ -47,13 +46,6 @@
       display: flex;
       width: 100%; height: 100vh;
     }
-    .currency {
-    background: url('currency.ico');
-    width: 12px;
-    height: 12px;
-    display: block;
-    /* vertical-align: middle; */
-    margin-right: 4px;
 
     /* ══════════════════════════════════════
        RIGHT SIDE  –  shopkeeper + bubble
@@ -120,6 +112,18 @@
       font-size: 7px;
       color: #b00;
       margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .currency {
+      background: url('currency.ico') center / contain no-repeat;
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
     }
 
     .typing-cursor::after {
@@ -325,85 +329,16 @@
 </div>
 
 <script>
-  /* ══════════════════════════════════════════════════════
-     ITEM LOADING — three-tier fallback:
-       1. items/manifest.json  →  ["file1.png", "file2.png", ...]
-       2. directory listing of items/  (works on many local servers)
-       3. hardcoded fallback list
-  ══════════════════════════════════════════════════════ */
-
-  // Add known metadata here. Key = bare filename inside items/.
-  // Anything not listed gets auto-generated name / price / desc.
-  const ITEM_META = {
-    'hobbies_r26_diamondblade.png': {
-      name: 'Diamond Blade',
-      price: '1500 GP',
-      desc: "Forged from the heart of a fallen star. Its edge never dulls and hums softly in the presence of dark magic. Legends say it cleaved a dragon's tooth clean off.",
-    },
-    'hobbies_c26_boardgamescrackable.png': {
-      name: 'Mystic Tome',
-      price: '320 GP',
-      desc: "An ancient tome sealed with a brass clasp. Its pages shift and rearrange themselves when no one is looking. Contains 99 puzzles — none have been solved.",
-    },
-  };
-
   const PLACEHOLDER_ICONS = ['⚗','🗝','💎','🔮','⚔','📜','🛡','🪙','🌿','🏺','🧿','⚡','🧪','🪄','🏹','🔱'];
 
-  function filenameToName(f) {
-    return f.replace(/\.[^.]+$/, '')
-            .replace(/^[a-z]+_[a-z]\d+_/, '')   // strip "hobbies_r26_" style prefix
-            .replace(/[_-]/g, ' ')
-            .replace(/\b\w/g, c => c.toUpperCase())
-            .trim() || f;
-  }
-
-  function buildItemFromFile(filename, index) {
-    const meta = ITEM_META[filename] || {};
-    return {
-      id: filename,
-      name:  meta.name  || filenameToName(filename),
-      image: 'items/' + filename,
-      price: meta.price || `${(index + 1) * 75} GP`,
-      desc:  meta.desc  || `A mysterious item of unknown origin. Theodor found it and decided to sell it. Probably harmless.`,
-    };
-  }
-
   async function loadItems() {
-    // 1 — manifest.json
-    try {
-      const r = await fetch('items/manifest.json');
-      if (r.ok) {
-        const list = await r.json();
-        if (Array.isArray(list) && list.length)
-          return list.map((f, i) => buildItemFromFile(f, i));
-      }
-    } catch (_) {}
-
-    // 2 — directory listing
-    try {
-      const r = await fetch('items/');
-      if (r.ok) {
-        const html = await r.text();
-        const matches = [...html.matchAll(/href="([^"]+\.(png|jpg|jpeg|gif|webp))"/gi)];
-        const files = matches.map(m => m[1].split('/').pop()).filter(Boolean);
-        if (files.length)
-          return files.map((f, i) => buildItemFromFile(f, i));
-      }
-    } catch (_) {}
-
-    // 3 — hardcoded fallback
-    return [
-      { id:'diamond_blade', name:'Diamond Blade', image:'hobbies_r26_diamondblade.png',       price:'1500 GP', desc:"Forged from the heart of a fallen star. Its edge never dulls." },
-      { id:'boardgames',    name:'Mystic Tome',   image:'hobbies_c26_boardgamescrackable.png', price:'320 GP',  desc:"An ancient tome. Its pages rearrange themselves when no one looks." },
-      { id:'p1', name:'Elven Dust',  image:null, price:'80 GP',   desc:'Shimmering powder from moonlit glades. Smells wonderful.' },
-      { id:'p2', name:'Fire Flask',  image:null, price:'150 GP',  desc:'A corked bottle of captured flame. Throw it and it erupts.' },
-      { id:'p3', name:'Iron Key',    image:null, price:'25 GP',   desc:'Opens something. Somewhere.' },
-      { id:'p4', name:'Luck Coin',   image:null, price:'500 GP',  desc:"Always lands on the side you don't want." },
-      { id:'p5', name:'Haste Boots', image:null, price:'780 GP',  desc:'30% more restless.' },
-      { id:'p6', name:'Shadow Cape', image:null, price:'1200 GP', desc:'Effective, but you will bump into tables.' },
-      { id:'p7', name:'Mana Stone',  image:null, price:'220 GP',  desc:'Arcane energy in gem form. Recharges at dawn.' },
-      { id:'p8', name:'Gold Ring',   image:null, price:'600 GP',  desc:'+2 to dinner-party impressions.' },
-    ];
+    const r = await fetch('items/items.json');
+    const items = await r.json();
+    // Prepend items/ folder to image filename
+    return items.map(item => ({
+      ...item,
+      image: item.image ? 'items/' + item.image : null
+    }));
   }
 
   /* ── SHELF BUILDER ── */
@@ -498,7 +433,7 @@
     const priceEl = document.getElementById('bubble-price');
     priceEl.textContent = '';
     textEl.classList.remove('typing-cursor');
-    typeText(textEl, item.desc, () => { priceEl.textContent = `Price: ${item.price}`; });
+    typeText(textEl, item.desc, () => { priceEl.innerHTML = `${item.price}<span class="currency"></span>`; });
   }
 
   /* ── BOOT ── */
