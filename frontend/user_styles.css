@@ -1,0 +1,78 @@
+main {
+	margin-top: 10vh;
+}
+
+/* .user-icon-big {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	max-height: 30vh;
+} */
+.user-page {
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+}
+
+/* LEFT SIDE */
+.user-left {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-icon-big {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+
+.currency-box {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.currency-box input {
+    width: 80%;
+    padding: 8px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* RIGHT SIDE */
+.user-right {
+    width: 70%;
+}
+
+.purchase-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.purchase-table th,
+.purchase-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.purchase-table img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    cursor: pointer;
+}
