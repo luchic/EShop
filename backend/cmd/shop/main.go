@@ -1,4 +1,4 @@
-package shop
+package main
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func main() {
 
 	repository, err := repository.NewRepository(cfg)
 	if err != nil {
-		fmt.Print("Couldn't create connection to database")
+		fmt.Println("Couldn't create connection to database: ", err.Error())
 		return
 	}
 
@@ -27,5 +27,6 @@ func main() {
 	handlers.AddRouter(mux, repository)
 
 	const addr = ":8080"
+	fmt.Println("Listen 127.0.0.1:8080")
 	http.ListenAndServe(addr, mux)
 }

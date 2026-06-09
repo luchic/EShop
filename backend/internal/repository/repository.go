@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"shop/internal/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -46,16 +47,19 @@ type Repository struct {
 }
 
 func NewRepository(cfg *config.Config) (*Repository, error) {
-	db, err := sql.Open("pgx", cfg.ConnectionString)
-	if err != nil {
-		return nil, err
+	if cfg == nil {
+		return nil, fmt.Errorf("Cfg is null")
 	}
+	// db, err := sql.Open("pgx", cfg.ConnectionString)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	if err := db.Ping(); err != nil {
-		db.Close()
-		return nil, err
-	}
-	return &Repository{db: db}, nil
+	// if err := db.Ping(); err != nil {
+	// 	db.Close()
+	// 	return nil, err
+	// }
+	return &Repository{db: nil}, nil
 }
 
 func (r *Repository) Close() error {
