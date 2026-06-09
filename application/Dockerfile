@@ -1,7 +1,11 @@
-FROM golang:1.24
+FROM golang:1.26.1
 
 RUN mkdir /app
 
 COPY . /app
 
-CMD ["go", "run", "/app/cmd/shop/main.go"]
+WORKDIR /app/server
+
+EXPOSE 8080
+
+CMD ["go", "run", "./cmd/shop/main.go"]
