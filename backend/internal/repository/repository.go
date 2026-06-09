@@ -1,0 +1,63 @@
+package repository
+
+import (
+	"database/sql"
+	"shop/internal/config"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
+)
+
+// Smaller suggestions
+// A few things worth considering, none of them bugs:
+// Set pool limits. sql.DB is a connection pool (safe for concurrent use — good
+// choice for a repository). By default it has unlimited open connections, which can overwhelm Postgres under load. Consider:
+// godb.SetMaxOpenConns(25)
+// db.SetMaxIdleConns(25)
+// db.SetConnMaxLifetime(5 * time.Minute)
+// Use context. Accepting a context.Context and using db.PingContext(ctx) lets callers control timeouts and cancellation on startup:
+// gofunc NewRepository(ctx context.Context, cfg config.Config) (*Repository, error) {
+// 	db, err := sql.Open("pgx", cfg.ConnectionString)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	if err := db.PingContext(ctx); err != nil {
+// 		db.Close()
+// 		return nil, err
+// 	}
+// 	// ...
+// }
+
+// Package name internal. Naming the package itself internal is
+// unusual — internal is a special directory name in Go
+// (it restricts who can import the directory), but as a package name it's vague.
+// Something like package repository or package postgres reads better. This is style, not a problem.
+// The good parts: you ping to verify the connection, you close db if the ping
+// fails (avoiding a leaked handle), and you propagate errors properly instead
+// of calling log.Fatal inside a constructor. That's the right shape for a constructor.
+// One thing to decide going forward: importing the stdlib adapter
+// means you're using pgx as a driver under database/sql.
+// That's a perfectly good choice — you get pgx's quality with the familiar
+// standard interface. But if you later want pgx's native features
+// (COPY, LISTEN/NOTIFY, richer types), you'd switch to pgxpool and pgx's own
+// API instead. Worth being intentional about which world you're in.
+
+type Repository struct {
+	db *sql.DB
+}
+
+func NewRepository(cfg *config.Config) (*Repository, error) {
+	db, err := sql.Open("pgx", cfg.ConnectionString)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, err
+	}
+	return &Repository{db: db}, nil
+}
+
+func (r *Repository) Close() error {
+	return r.db.Close()
+}
