@@ -1,3 +1,4 @@
 {
-  "connection_string": "postgres://user:pass@localhost:5432/mydb"
+
+  "connection_string": "postgres://shop:shop@shop-db:5432/shop?sslmode=disable"
 }

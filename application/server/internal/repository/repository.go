@@ -50,15 +50,15 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 	if cfg == nil {
 		return nil, fmt.Errorf("Cfg is null")
 	}
-	// db, err := sql.Open("pgx", cfg.ConnectionString)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	db, err := sql.Open("pgx", cfg.ConnectionString)
+	if err != nil {
+		return nil, err
+	}
 
-	// if err := db.Ping(); err != nil {
-	// 	db.Close()
-	// 	return nil, err
-	// }
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, err
+	}
 	return &Repository{db: nil}, nil
 }
 
