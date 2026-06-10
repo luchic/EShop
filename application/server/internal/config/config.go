@@ -7,6 +7,7 @@ import (
 
 type Config struct {
 	ConnectionString string `json:"connection_string"`
+	Host             string `json:"host"`
 }
 
 func NewConfig(path string) (*Config, error) {

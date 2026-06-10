@@ -26,7 +26,6 @@ func main() {
 	mux := http.NewServeMux()
 	handlers.AddRouter(mux, repository)
 
-	const addr = ":8080"
 	fmt.Println("Listen 127.0.0.1:8080")
-	http.ListenAndServe(addr, mux)
+	http.ListenAndServe(cfg.Host, mux)
 }
