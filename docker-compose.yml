@@ -1,80 +1,34 @@
 services:
-  postgres:
+  server:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+    networks:
+      - shop-net
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      shop-db:
+        condition: service_healthy
+
+  shop-db:
     image: postgres:17-alpine
     container_name: shop-postgres
     environment:
       POSTGRES_DB: shop
       POSTGRES_USER: shop
       POSTGRES_PASSWORD: shop
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U shop -d shop"]
-      interval: 5s
+      interval: 2s
       timeout: 5s
       retries: 10
     restart: unless-stopped
     networks:
-      - theshop-net
-
-  migration:
-    env_file: "./.env"
-    image: golang:1.26
-    container_name: shop-migration
-    working_dir: /app/backend/migration
-    command: go run ./cmd/migrate/main.go up
-    environment:
-      AUTH_DATABASE_URL: ${CONNECTION_STRING:-change-me}
-    volumes:
-      - ./:/app
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
-    networks:
-      - theshop-net
-
-  backend:
-    env_file: "./.env"
-    image: golang:1.26
-    container_name: shop-backend
-    working_dir: /app/backend/shop
-    command: go run ./cmd/main.go
-    environment:
-      AUTH_DATABASE_URL: ${CONNECTION_STRING:-change-me}
-      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:-dev-secret-change-me}
-      AUTH_42_CLIENT_ID: ${AUTH_42_CLIENT_ID:-change-me}
-      AUTH_42_CLIENT_SECRET: ${AUTH_42_CLIENT_SECRET:-change-me}
-      AUTH_42_REDIRECT_URI: ${AUTH_42_REDIRECT_URI:-http://localhost:8080/auth/42/callback}
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./:/app
-    depends_on:
-      postgres:
-        condition: service_healthy
-      migration:
-        condition: service_completed_successfully
-    restart: unless-stopped
-    networks:
-      - theshop-net
-
-  frontend:
-    image: nginx:alpine
-    container_name: shop-frontend
-    ports:
-      - "3000:80"
-    volumes:
-      - ./frontend:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      backend:
-        condition: service_started
-    restart: unless-stopped
-    networks:
-      - theshop-net
+      - shop-net
 
   adminer:
     image: adminer:4
@@ -84,15 +38,26 @@ services:
     ports:
       - "8081:8080"
     depends_on:
-      postgres:
+      shop-db:
         condition: service_healthy
     restart: unless-stopped
     networks:
-      - theshop-net
+      - shop-net
+  
+  migration:
+    build:
+      context: ./application
+      dockerfile: Dockerfile.Migration
+    
+    networks:
+      - shop-net
+    depends_on:
+      shop-db:
+        condition: service_healthy
 
 volumes:
   postgres-data:
 
 networks:
-  theshop-net:
+  shop-net:
     driver: bridge
