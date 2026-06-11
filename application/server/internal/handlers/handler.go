@@ -17,6 +17,7 @@ func AddRouter(mux *http.ServeMux, repository *repository.Repository) *http.Serv
 
 	handler := newHandler(repository)
 	mux.HandleFunc("GET /", handler.handleHome)
+	mux.HandleFunc("POST /user/register", handler.handleCreateUser)
 	return mux
 }
 

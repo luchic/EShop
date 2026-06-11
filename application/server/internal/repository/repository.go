@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"shop/internal/api"
 	"shop/internal/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -64,4 +65,13 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 
 func (r *Repository) Close() error {
 	return r.db.Close()
+}
+
+func (r *Repository) CreateUsesr(user api.User) error {
+	_, err := r.db.Exec(
+		"INSERT INTO users (first_name, second_name, email) VALUES (?, ?, ?,)",
+		user.FirstName,
+		user.SecondName,
+		user.Email)
+	return err
 }
