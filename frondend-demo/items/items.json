@@ -1,0 +1,149 @@
+[
+  {
+    "id": "coalition_boost_small",
+    "name": "Coalition boost XL",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "1500",
+    "desc": "Coalition boost (Small): For the next hour all the points gained by your coalition will be doubled! Get ready %%COALITION_NAME%%!"
+  },
+  {
+    "id": "streak_protection_small",
+    "name": "Streak protection shield XS",
+    "image": "shield_small__1_-removebg-preview.png",
+    "price": "320",
+    "desc": "Small protection shield. Prevents streak loss on the intranet platform. Mounthly purchaise limit (1/3)"
+  },
+  {
+    "id": "streak_protection_large",
+    "name": "Streak protection shield XL",
+    "image": "shield_small__1_-removebg-preview.png",
+    "price": "640",
+    "desc": "Large protection shield. Prevents streak loss on the intranet platform to you and one more teammate from your coalition. Mounthly purchaise limit (0/1)"
+  },
+  {
+    "id": "shopaholic_title",
+    "name": "Shopaholic title",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "1500",
+    "desc": "Did you really just spent all money on this??... Okay."
+  },
+  {
+    "id": "diamond_blade",
+    "name": "Diamond Blade",
+    "image": "hobbies_r26_diamondblade.png",
+    "price": "1500",
+    "desc": "Forged from the heart of a fallen star. Its edge never dulls and hums softly in the presence of dark magic. Legends say it cleaved a dragon's tooth clean off."
+  },
+  {
+    "id": "coalitions_frame",
+    "name": "Coalitions unity frame",
+    "image": "frame.jpg",
+    "price": "1500",
+    "desc": "Forged from the heart of a fallen star. Each segment of the frame is inscribed with the sigils of the Great Coalitions, representing the unbreakable bond formed during the Coalition Clash. Despite its delicate appearance, the frame is virtually indestructible, vibrating with the resonant frequency of a thousand unified hearts."
+  },
+  {
+    "id": "avatar_change",
+    "name": "Avatar restyle",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "1500",
+    "desc": "Your avatar will be modifided. Let you be surprised how."
+  },
+  {
+    "id": "coalition_switch",
+    "name": "Coalition change",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "1500",
+    "desc": "Your avatar will be modifided. Let you be surprised how."
+  },
+  {
+    "id": "boardgames",
+    "name": "Mystic Tome",
+    "image": "hobbies_c26_boardgamescrackable.png",
+    "price": "320",
+    "desc": "An ancient tome sealed with a brass clasp. Its pages shift and rearrange themselves when no one is looking. Contains 99 puzzles — none have been solved."
+  },
+  {
+    "id": "p1",
+    "name": "Elven Dust",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "80",
+    "desc": "Shimmering powder harvested from moonlit glades. Sprinkle it and nothing happens — but it smells wonderful."
+  },
+  {
+    "id": "p2",
+    "name": "Fire Flask",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "150",
+    "desc": "A corked bottle of captured flame. Throw it and it erupts. Store it and it broods."
+  },
+  {
+    "id": "p3",
+    "name": "Iron Key",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "25",
+    "desc": "A heavy iron key of unknown origin. It opens something. Somewhere."
+  },
+  {
+    "id": "p4",
+    "name": "Luck Coin",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "500",
+    "desc": "Flip it and it always lands on the side you don't want."
+  },
+  {
+    "id": "p5",
+    "name": "Haste Boots",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "780",
+    "desc": "Enchanted leather boots that make you 30% more restless."
+  },
+  {
+    "id": "p6",
+    "name": "Shadow Cape",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "1200",
+    "desc": "Weave yourself into the darkness. Effective, but you will keep bumping into tables."
+  },
+  {
+    "id": "p7",
+    "name": "Mana Stone",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "220",
+    "desc": "A pulsing blue gem that softly hums with arcane energy. Recharges at dawn."
+  },
+  {
+    "id": "p8",
+    "name": "Gold Ring",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "600",
+    "desc": "Solid gold with a sapphire. +2 to looking impressive at dinner parties."
+  },
+  {
+    "id": "p9",
+    "name": "Thunder Rod",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "900",
+    "desc": "Strike the ground and call the storm. Or use it as a walking stick on sunny days."
+  },
+  {
+    "id": "p10",
+    "name": "Mushroom Bag",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "45",
+    "desc": "A cloth bag full of dried mushrooms. Some are edible. Theodor is not certain which."
+  },
+  {
+    "id": "p11",
+    "name": "Frozen Arrow",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "110",
+    "desc": "Tip enchanted with permafrost. Freezes on contact. Do not store near the fire flask."
+  },
+  {
+    "id": "p12",
+    "name": "Dragon Tooth",
+    "image": "item-no-backgroung_retouched.png",
+    "price": "3000",
+    "desc": "Enormous fang of an elder dragon. It still tingles. Theodor won't say how he got it."
+  }
+]
