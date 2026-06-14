@@ -11,9 +11,9 @@
 | `second_name` | TEXT          | Not null              |
 | `email`       | TEXT          | Unique, not null      |
 | `password`    | TEXT          | bcrypt hash           |
-| `role`        | TEXT          | `customer` \| `admin` |
+<!-- | `role`        | TEXT          | `customer` \| `admin` | -->
 | `created_at`  | TIMESTAMPTZ   | Default NOW()         |
-| `updated_at`  | TIMESTAMPTZ   |                       |
+<!-- | `updated_at`  | TIMESTAMPTZ   |                       | -->
 
 ---
 
@@ -26,10 +26,10 @@
 | `description` | TEXT          |               |
 | `price`       | NUMERIC(10,2) | Not null      |
 | `stock`       | INTEGER       | Default 0     |
-| `category`    | TEXT          |               |
+<!-- | `category`    | TEXT          |               | -->
 | `image_url`   | TEXT          |               |
 | `created_at`  | TIMESTAMPTZ   | Default NOW() |
-| `updated_at`  | TIMESTAMPTZ   |               |
+<!-- | `updated_at`  | TIMESTAMPTZ   |               | -->
 
 ---
 
@@ -42,7 +42,7 @@
 | `status`     | TEXT          | `pending` \| `processing` \| `completed` \| `cancelled` |
 | `total`      | NUMERIC(10,2) | Price snapshot at order time                            |
 | `created_at` | TIMESTAMPTZ   | Default NOW()                                           |
-| `updated_at` | TIMESTAMPTZ   |                                                         |
+<!-- | `updated_at` | TIMESTAMPTZ   |                                                         | -->
 
 ---
 
