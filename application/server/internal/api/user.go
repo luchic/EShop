@@ -9,6 +9,11 @@ type RegisterUser struct {
 	Password   string `json:"password"`
 }
 
+type LoginUser struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type User struct {
 	Id         int64     `db:"id"`
 	FirstName  string    `db:"first_name"`
