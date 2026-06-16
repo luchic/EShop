@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"shop/internal/auth"
 	"shop/internal/repository"
 
 	"github.com/go-redis/redis/v8"
@@ -10,7 +11,7 @@ import (
 )
 
 type Handler struct {
-	redis      *redis.Client
+	auth       *auth.Service
 	repository *repository.Repository
 }
 
@@ -29,7 +30,7 @@ func AddRouter(mux *http.ServeMux, repository *repository.Repository, redis *red
 
 func newHandler(repository *repository.Repository, redis *redis.Client) *Handler {
 	return &Handler{
-		redis:      redis,
+		auth:       auth.NewService(redis),
 		repository: repository,
 	}
 }
