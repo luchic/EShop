@@ -1,3 +1,10 @@
+// @title           Shop API
+// @version         1.0
+// @description     Theodor's Emporium backend API.
+//
+// @host      localhost:8080
+// @BasePath  /
+
 package main
 
 import (
@@ -6,6 +13,7 @@ import (
 	"shop/internal/config"
 	"shop/internal/handlers"
 	"shop/internal/repository"
+	_ "shop/docs"
 )
 
 func main() {

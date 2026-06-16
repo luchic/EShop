@@ -13,6 +13,15 @@ import (
 
 const SESSION_DURATION = 30 * time.Minute
 
+// handleRegisterUser godoc
+// @Summary      Register a new user
+// @Tags         users
+// @Accept       json
+// @Produce      plain
+// @Param        body  body      api.RegisterUser  true  "Registration payload"
+// @Success      201
+// @Failure      400  {string}  string  "Bad request"
+// @Router       /user/register [post]
 func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -35,6 +44,17 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// handleLoginUser godoc
+// @Summary      Login
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        body  body      api.LoginUser      true  "Login payload"
+// @Success      200   {object}  api.LoginResponse
+// @Failure      400   {string}  string  "Bad request"
+// @Failure      401   {string}  string  "Unauthorized"
+// @Failure      500   {string}  string  "Internal server error"
+// @Router       /user/login [post]
 func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -76,6 +96,10 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func (h *Handler) createSession(user *api.User) (string, time.Time, error) {
