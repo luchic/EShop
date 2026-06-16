@@ -14,6 +14,20 @@ type LoginUser struct {
 	Password string `json:"password"`
 }
 
+type LoginResponse struct {
+	SessionId string `json:"session_id"`
+	UserId    int64  `json:"user_id"`
+	Email     string `json:"email"`
+	ExpiresAt int64  `json:"expires_at"`
+}
+
+type SessionData struct {
+	UserID    int64     `json:"user_id"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	ExpiresAt time.Time `json:"expires_at"`
+}
+
 type User struct {
 	Id         int64     `db:"id"`
 	FirstName  string    `db:"first_name"`
