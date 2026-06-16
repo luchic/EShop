@@ -31,7 +31,7 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	var registerUser api.RegisterUser
 	if err := json.NewDecoder(r.Body).Decode(&registerUser); err != nil {
-		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		http.Error(w, "BBad Request", http.StatusBadRequest)
 		return
 	}
 
