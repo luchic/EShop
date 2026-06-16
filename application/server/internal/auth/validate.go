@@ -13,7 +13,7 @@ func IsLoginUserValid(loginUser api.LoginUser) bool {
 	return true
 }
 
-func VerifyPassword(login_password string, actual_hash []byte) bool {
-	err := bcrypt.CompareHashAndPassword(actual_hash, []byte(login_password))
+func VerifyPassword(loginPassowrd string, actualHash []byte) bool {
+	err := bcrypt.CompareHashAndPassword(actualHash, []byte(loginPassowrd))
 	return err == nil
 }
