@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	RedisHost        string `json:"redis_host"`
 	ConnectionString string `json:"connection_string"`
 	Host             string `json:"host"`
 }

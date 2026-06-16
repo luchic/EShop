@@ -1,5 +1,5 @@
 {
-  "host_redis" : "",
+  "redis_host" : "shop-redis:6379",
   "connection_string": "postgres://shop:shop@shop-db:5432/shop?sslmode=disable",
   "host" : ":8080"
 }
