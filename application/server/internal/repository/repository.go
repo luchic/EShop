@@ -69,7 +69,7 @@ func (r *Repository) Close() error {
 
 func (r *Repository) CreateUsesr(user api.User) error {
 	_, err := r.db.Exec(
-		"INSERT INTO users (first_name, second_name, email, password) VALUES (?, ?, ?, ?)",
+		"INSERT INTO users (first_name, second_name, email, password) VALUES ($?, $?, $?, $?)",
 		user.FirstName,
 		user.SecondName,
 		user.Email,
@@ -80,7 +80,7 @@ func (r *Repository) CreateUsesr(user api.User) error {
 func (r *Repository) GetUserByEmail(user_email string) (api.User, error) {
 	var user api.User
 
-	rows := r.db.QueryRow("SELECT * FROM users WHERE email = ?", user_email)
+	rows := r.db.QueryRow("SELECT * FROM users WHERE email = $?", user_email)
 
 	err := rows.Scan(
 		&user.Id,
