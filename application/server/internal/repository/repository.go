@@ -60,7 +60,7 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 		db.Close()
 		return nil, err
 	}
-	return &Repository{db: nil}, nil
+	return &Repository{db: db}, nil
 }
 
 func (r *Repository) Close() error {
@@ -69,7 +69,7 @@ func (r *Repository) Close() error {
 
 func (r *Repository) CreateUsesr(user api.User) error {
 	_, err := r.db.Exec(
-		"INSERT INTO users (first_name, second_name, email, password) VALUES (?, ?, ?, ?,)",
+		"INSERT INTO users (first_name, second_name, email, password) VALUES (?, ?, ?, ?)",
 		user.FirstName,
 		user.SecondName,
 		user.Email,

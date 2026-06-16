@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"shop/internal/api"
@@ -30,14 +31,18 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	var registerUser api.RegisterUser
 	if err := json.NewDecoder(r.Body).Decode(&registerUser); err != nil {
-		http.Error(w, "Couldn't decode json body", http.StatusBadRequest)
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
 	}
 
-	user := mapRegisterUserToUser(registerUser)
+	user, err := mapRegisterUserToUser(registerUser)
+	if err != nil {
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
 
 	if err := h.repository.CreateUsesr(user); err != nil {
-		http.Error(w, "Internal Error", http.StatusBadRequest)
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -69,6 +74,7 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 
 	if !isLoginUserValid(loginUser) {
 		http.Error(w, "Email and password requiered", http.StatusBadRequest)
+		return
 	}
 
 	user, err := h.repository.GetUserByEmail(loginUser.Email)
@@ -85,6 +91,7 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 	sessionId, expiresAt, err := h.createSession(&user)
 	if err != nil {
 		http.Error(w, "Failed to create session", http.StatusInternalServerError)
+		return
 	}
 
 	response := api.LoginResponse{
@@ -141,7 +148,7 @@ func generateSessionId() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(bytes), nil
+	return hex.EncodeToString(bytes), nil
 }
 
 func isLoginUserValid(loginUser api.LoginUser) bool {
@@ -155,8 +162,11 @@ func verifyPassword(login_password string, actual_hash []byte) bool {
 }
 
 // Implementation isn't so good.
-func mapRegisterUserToUser(registerUser api.RegisterUser) api.User {
-	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(registerUser.Password), bcrypt.DefaultCost)
+func mapRegisterUserToUser(registerUser api.RegisterUser) (api.User, error) {
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(registerUser.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return api.User{}, err
+	}
 
 	user := api.User{
 		FirstName:  registerUser.FirstName,
@@ -164,5 +174,5 @@ func mapRegisterUserToUser(registerUser api.RegisterUser) api.User {
 		Email:      registerUser.Email,
 		Password:   hashPassword,
 	}
-	return user
+	return user, nil
 }
