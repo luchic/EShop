@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"net/http"
 	"shop/internal/api"
@@ -111,9 +112,12 @@ func (h *Handler) createSession(user *api.User) (string, time.Time, error) {
 }
 
 func generateSessionId() (string, error) {
-	b := make([]byte, 32)
-	_ = b
-	return "", nil
+	bytes := make([]byte, 32)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
 }
 
 func isLoginUserValid(loginUser api.LoginUser) bool {
