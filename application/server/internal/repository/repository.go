@@ -76,3 +76,26 @@ func (r *Repository) CreateUsesr(user api.User) error {
 		user.Password)
 	return err
 }
+
+func (r *Repository) GetUserByEmail(user_email string) (api.User, error) {
+	var user api.User
+
+	rows := r.db.QueryRow("SELECT * FROM users WHERE email = ?", user_email)
+
+	err := rows.Scan(
+		&user.Id,
+		&user.FirstName,
+		&user.SecondName,
+		&user.Email,
+		&user.Password,
+		&user.CreatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("GetUserByEmail %s: no such user", user_email)
+		}
+		return user, fmt.Errorf("GetUserByEmail %s: %v", user_email, err)
+	}
+	return user, nil
+}
