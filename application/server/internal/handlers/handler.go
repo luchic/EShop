@@ -6,6 +6,7 @@ import (
 	"shop/internal/repository"
 
 	"github.com/go-redis/redis/v8"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type Handler struct {
@@ -21,6 +22,8 @@ func AddRouter(mux *http.ServeMux, repository *repository.Repository, redis *red
 	handler := newHandler(repository, redis)
 	mux.HandleFunc("GET /", handler.handleHome)
 	mux.HandleFunc("POST /user/register", handler.handleRegisterUser)
+	mux.HandleFunc("POST /user/login", handler.handleLoginUser)
+	mux.Handle("GET /swagger/", httpSwagger.WrapHandler)
 	return mux
 }
 
