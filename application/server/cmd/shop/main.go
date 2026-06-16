@@ -10,15 +10,15 @@ package main
 import (
 	"fmt"
 	"net/http"
+	_ "shop/docs"
 	"shop/internal/config"
 	"shop/internal/handlers"
 	"shop/internal/repository"
-	_ "shop/docs"
 )
 
 func main() {
 	cfg, err := config.NewConfig("config.json")
-	if err != err {
+	if err != nil {
 		fmt.Println("Couldn't create configuration structure")
 		return
 	}
