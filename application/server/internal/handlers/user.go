@@ -41,7 +41,7 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.repository.CreateUsesr(user); err != nil {
+	if err := h.repository.CreateUser(user); err != nil {
 		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
 	}

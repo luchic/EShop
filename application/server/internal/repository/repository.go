@@ -67,7 +67,7 @@ func (r *Repository) Close() error {
 	return r.db.Close()
 }
 
-func (r *Repository) CreateUsesr(user api.User) error {
+func (r *Repository) CreateUser(user api.User) error {
 	_, err := r.db.Exec(
 		"INSERT INTO users (first_name, second_name, email, password) VALUES ($?, $?, $?, $?)",
 		user.FirstName,
