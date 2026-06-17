@@ -1,0 +1,150 @@
+basePath: /
+definitions:
+  api.GetUserByIdRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  api.LoginResponse:
+    properties:
+      email:
+        type: string
+      expires_at:
+        type: integer
+      session_id:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  api.LoginUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  api.RegisterUser:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      password:
+        type: string
+      second_name:
+        type: string
+    type: object
+  api.User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      password:
+        items:
+          type: integer
+        type: array
+      secondName:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Theodor's Emporium backend API.
+  title: Shop API
+  version: "1.0"
+paths:
+  /user/info:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Email
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.GetUserByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.User'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Ger User
+      tags:
+      - users
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.LoginUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.LoginResponse'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - users
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Registration payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.RegisterUser'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - users
+swagger: "2.0"

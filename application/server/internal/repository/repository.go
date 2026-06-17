@@ -60,19 +60,42 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 		db.Close()
 		return nil, err
 	}
-	return &Repository{db: nil}, nil
+	return &Repository{db: db}, nil
 }
 
 func (r *Repository) Close() error {
 	return r.db.Close()
 }
 
-func (r *Repository) CreateUsesr(user api.User) error {
+func (r *Repository) CreateUser(user api.User) error {
 	_, err := r.db.Exec(
-		"INSERT INTO users (first_name, second_name, email, password) VALUES (?, ?, ?, ?,)",
+		"INSERT INTO users (first_name, second_name, email, password) VALUES ($1, $2, $3, $4)",
 		user.FirstName,
 		user.SecondName,
 		user.Email,
 		user.Password)
 	return err
+}
+
+func (r *Repository) GetUserByEmail(user_email string) (api.User, error) {
+	var user api.User
+
+	rows := r.db.QueryRow("SELECT * FROM users WHERE email = $1", user_email)
+
+	err := rows.Scan(
+		&user.Id,
+		&user.FirstName,
+		&user.SecondName,
+		&user.Email,
+		&user.Password,
+		&user.CreatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("GetUserByEmail %s: no such user", user_email)
+		}
+		return user, fmt.Errorf("GetUserByEmail %s: %v", user_email, err)
+	}
+	return user, nil
 }
