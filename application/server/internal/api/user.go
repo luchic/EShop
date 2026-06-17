@@ -22,6 +22,7 @@ type LoginResponse struct {
 }
 
 type SessionData struct {
+	SessionId string    `json:"session_id"`
 	UserID    int64     `json:"user_id"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
