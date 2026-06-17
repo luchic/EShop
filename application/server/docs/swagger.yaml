@@ -1,5 +1,10 @@
 basePath: /
 definitions:
+  api.GetUserByIdRequest:
+    properties:
+      email:
+        type: string
+    type: object
   api.LoginResponse:
     properties:
       email:
@@ -29,6 +34,23 @@ definitions:
       second_name:
         type: string
     type: object
+  api.User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      password:
+        items:
+          type: integer
+        type: array
+      secondName:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -36,6 +58,39 @@ info:
   title: Shop API
   version: "1.0"
 paths:
+  /user/info:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Email
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.GetUserByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.User'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Ger User
+      tags:
+      - users
   /user/login:
     post:
       consumes:
