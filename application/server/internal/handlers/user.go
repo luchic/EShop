@@ -101,3 +101,43 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 
 }
+
+// handleLoginUser godoc
+// @Summary      Ger User
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        body  body      api.GetUserByIdRequest      true  "User Email"
+// @Success      200   {object}  api.User
+// @Failure      400   {string}  string  "Bad request"
+// @Failure      401   {string}  string  "Unauthorized"
+// @Failure      500   {string}  string  "Internal server error"
+// @Router       /user/info [post]
+func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
+	_, err := h.auth.ValidateSession(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var getUserByIdRequest api.GetUserByIdRequest
+	err = json.NewDecoder(r.Body).Decode(&getUserByIdRequest)
+	if err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	user, err := h.repository.GetUserByEmail(getUserByIdRequest.Email)
+	if err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(user)
+}

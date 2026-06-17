@@ -28,6 +28,10 @@ type SessionData struct {
 	ExpiresAt time.Time `json:"expires_at"`
 }
 
+type GetUserByIdRequest struct {
+	Email string `json:"email"`
+}
+
 type User struct {
 	Id         int64     `db:"id"`
 	FirstName  string    `db:"first_name"`
