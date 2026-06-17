@@ -17,6 +17,9 @@ import (
 // @Failure      400  {string}  string  "Bad request"
 // @Router       /user/register [post]
 func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
+	// I'm not realy sure, but this messages could be bad. It better use
+	// Some logging system to make it.
+	// I will just it leave. I want to reaturn nothing for now.
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -35,10 +38,18 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.repository.CreateUser(user); err != nil {
-		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		http.Error(w, "Failed to create user", http.StatusInternalServerError)
 		return
 	}
 
+	sessionId, _, err := h.auth.CreateSession(&user)
+	if err != nil {
+		http.Error(w, "Failed to create session", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Set-Cookie", "session_id="+sessionId)
 	w.WriteHeader(http.StatusCreated)
 }
 
