@@ -94,6 +94,7 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 		ExpiresAt: expiresAt.Unix(),
 	}
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Set-Cookie", "session_id="+sessionId)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
