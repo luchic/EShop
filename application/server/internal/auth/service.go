@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"net/http"
 	"shop/internal/api"
 	"time"
 
@@ -52,6 +53,38 @@ func (s *Service) CreateSession(user *api.User) (string, time.Time, error) {
 	}
 
 	return sessionId, expiredAt, nil
+}
+
+func (s *Service) ValidateSession(r *http.Request) (api.SessionData, error) {
+	cocke, err := r.Cookie("session_id")
+	if err != nil {
+		return api.SessionData{}, err
+	}
+
+	sessionId := cocke.Value
+
+	sessionData, err := s.getSessionDataById(sessionId)
+	if err != nil {
+		return api.SessionData{}, err
+	}
+
+	return sessionData, nil
+}
+
+func (s *Service) getSessionDataById(sessionId string) (api.SessionData, error) {
+	sessionDataJSON, err := s.redis.Get(context.Background(), sessionId).Result()
+	if err != nil {
+		return api.SessionData{}, err
+	}
+	var sessionData api.SessionData
+	// sessionDataJSON.Bytes()
+	err = json.Unmarshal([]byte(sessionDataJSON), &sessionData)
+	if err != nil {
+		return api.SessionData{}, err
+	}
+	// I don't now if i need to delete data row from redis
+
+	return  sessionData, nil
 }
 
 func generateSessionId() (string, error) {
