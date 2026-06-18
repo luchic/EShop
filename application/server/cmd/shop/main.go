@@ -14,6 +14,7 @@ import (
 	"shop/internal/config"
 	"shop/internal/handlers"
 	"shop/internal/repository"
+	"shop/internal/services"
 )
 
 func main() {
@@ -41,7 +42,8 @@ func main() {
 
 	mux := http.NewServeMux()
 	handlers.AddRouter(mux, repo, redis)
+	wrappedMux := services.RequestIdMiddleware(mux)
 
 	fmt.Printf("Listen %s\n", cfg.Host)
-	http.ListenAndServe(cfg.Host, mux)
+	http.ListenAndServe(cfg.Host, wrappedMux)
 }
