@@ -69,29 +69,32 @@ func (r *Repository) Close() error {
 
 func (r *Repository) CreateUser(user api.User) error {
 	_, err := r.db.Exec(
-		"INSERT INTO users (first_name, second_name, email, password) VALUES ($1, $2, $3, $4)",
+		"INSERT INTO users (first_name, second_name, email, password, role) VALUES ($1, $2, $3, $4, $5)",
 		user.FirstName,
 		user.SecondName,
 		user.Email,
-		user.Password)
+		user.Password,
+		user.Role)
 	return err
 }
 
 func (r *Repository) GetUserByEmail(user_email string) (api.User, error) {
 	var user api.User
 
-	rows := r.db.QueryRow("SELECT * FROM users WHERE email = $1", user_email)
+	rows := r.db.QueryRow("SELECT id, first_name, second_name, email, role, password, created_at FROM users WHERE email = $1", user_email)
 
 	err := rows.Scan(
 		&user.Id,
 		&user.FirstName,
 		&user.SecondName,
 		&user.Email,
+		&user.Role,
 		&user.Password,
 		&user.CreatedAt,
 	)
 
 	if err != nil {
+		fmt.Println(err)
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("GetUserByEmail %s: no such user", user_email)
 		}
