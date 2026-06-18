@@ -35,15 +35,15 @@ Browser
 ## Phases
 
 ### Phase 1 — Foundation
-- [ ] Clean up repo: remove old code, reset docker-compose from scratch
-- [ ] Set up PostgreSQL with migrations (use `golang-migrate` or plain SQL files)
-- [ ] Define DB schema: `users`, `products`, `orders`, `order_items`
+- [+] Clean up repo: remove old code, reset docker-compose from scratch
+- [+] Set up PostgreSQL with migrations (use `golang-migrate` or plain SQL files)
+- [+/-] Define DB schema: `users`, `products`, `orders`, `order_items`
 - [ ] Go project structure (`cmd/api`, `internal/`, `pkg/`)
 - [ ] Basic HTTP server with health check endpoint
 
 ### Phase 2 — Auth + Users
-- [ ] User registration & login (bcrypt passwords)
-- [ ] JWT or session-based auth stored in Redis
+- [+] User registration & login (bcrypt passwords)
+- [+] JWT or session-based auth stored in Redis
 - [ ] Middleware for protected routes
 
 ### Phase 3 — Products
