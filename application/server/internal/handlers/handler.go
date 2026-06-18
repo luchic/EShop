@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"shop/internal/auth"
 	"shop/internal/repository"
@@ -11,6 +12,7 @@ import (
 )
 
 type Handler struct {
+	logger     *slog.Logger
 	auth       *auth.Service
 	repository *repository.Repository
 }
@@ -30,7 +32,9 @@ func AddRouter(mux *http.ServeMux, repository *repository.Repository, redis *red
 }
 
 func newHandler(repository *repository.Repository, redis *redis.Client) *Handler {
+	// Just for now i want to leve just Default
 	return &Handler{
+		logger:     slog.Default(),
 		auth:       auth.NewService(redis),
 		repository: repository,
 	}
