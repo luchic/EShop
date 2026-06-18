@@ -14,6 +14,7 @@ func MapRegisterUserToUser(registerUser api.RegisterUser) (api.User, error) {
 	}
 
 	user := api.User{
+		Role:       "user",
 		FirstName:  registerUser.FirstName,
 		SecondName: registerUser.SecondName,
 		Email:      registerUser.Email,
