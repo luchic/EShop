@@ -32,6 +32,7 @@ func (s *Service) CreateSession(user *api.User) (string, time.Time, error) {
 	expiredAt := timeNow.Add(SESSION_DURATION)
 
 	sessionData := api.SessionData{
+		SessionId: sessionId,
 		UserID:    user.Id,
 		Email:     user.Email,
 		CreatedAt: timeNow,
@@ -71,6 +72,11 @@ func (s *Service) ValidateSession(r *http.Request) (api.SessionData, error) {
 	return sessionData, nil
 }
 
+// For now i just leave it like this.
+func (s *Service) DeleteSessionById(sessionId string) {
+	s.redis.Del(context.Background(), sessionId)
+}
+
 func (s *Service) getSessionDataById(sessionId string) (api.SessionData, error) {
 	sessionDataJSON, err := s.redis.Get(context.Background(), sessionId).Result()
 	if err != nil {
@@ -84,7 +90,7 @@ func (s *Service) getSessionDataById(sessionId string) (api.SessionData, error) 
 	}
 	// I don't now if i need to delete data row from redis
 
-	return  sessionData, nil
+	return sessionData, nil
 }
 
 func generateSessionId() (string, error) {

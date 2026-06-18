@@ -110,8 +110,30 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// handleLogOut godoc
+// @Summary      Logout User
+// @Tags         users
+// @Success      200   "Logged out successfully"
+// @Failure      400   {string}  string  "Bad request"
+// @Failure      401   {string}  string  "Unauthorized"
+// @Failure      500   {string}  string  "Internal server error"
+// @Router       /user/info [post]
 func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
+	sessionData, err := h.auth.ValidateSession(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	h.auth.DeleteSessionById(sessionData.SessionId)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Set-Cookie", "session_id=")
+	w.WriteHeader(http.StatusOK)
 }
 
 // handleLoginUser godoc

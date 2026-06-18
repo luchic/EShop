@@ -12,8 +12,11 @@ clean:
 fclean:
 	${COMPOSE} down -v --rmi all
 
+swagger:
+	swag init -g  ./application/server/cmd/shop/main.go -o ./application/server/docs
+
 re:
 	make clean
 	make up
 
-.PHONY: re clean fclean down up
+.PHONY: re clean fclean down up swagger

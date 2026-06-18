@@ -22,6 +22,7 @@ type LoginResponse struct {
 }
 
 type SessionData struct {
+	SessionId string    `json:"session_id"`
 	UserID    int64     `json:"user_id"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
@@ -34,6 +35,7 @@ type GetUserByIdRequest struct {
 
 type User struct {
 	Id         int64     `db:"id"`
+	Role       string    `db:"role"`
 	FirstName  string    `db:"first_name"`
 	SecondName string    `db:"second_name"`
 	Email      string    `db:"email"`
