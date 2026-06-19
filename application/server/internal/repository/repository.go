@@ -114,11 +114,28 @@ func (r *Repository) CreateProduct(product api.Product) error {
 }
 
 func (r *Repository) GetProductById(productId int64) (api.Product, error) {
-	return api.Product{}, nil
+	row := r.db.QueryRow(
+		"SELECT id, name, description, price, stock, image_url, created_at FROM products WHERE id = $1",
+		productId)
+
+	var product api.Product
+	err := row.Scan(
+		&product.Id,
+		&product.Name,
+		&product.Price,
+		&product.Stock,
+		&product.ImageUrl,
+		&product.CreatedAt)
+	if err != nil {
+		return product, err
+	}
+	return product, nil
 }
 
 func (r *Repository) GetProductsByName(name string) ([]api.Product, error) {
-	rows, err := r.db.Query("SELECT id, name, description, price, stock, image_url, created_at FROM products WHERE name = $1", name)
+	rows, err := r.db.Query(
+		"SELECT id, name, description, price, stock, image_url, created_at FROM products WHERE name = $1",
+		name)
 	if err != nil {
 		return nil, err
 	}
