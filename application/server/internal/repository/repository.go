@@ -113,7 +113,7 @@ func (r *Repository) CreateProduct(product api.Product) error {
 	return err
 }
 
-func (r *Repository) GetPRoductsById(productId int64) (api.Product, error) {
+func (r *Repository) GetProductById(productId int64) (api.Product, error) {
 	return api.Product{}, nil
 }
 
