@@ -12,16 +12,20 @@ func MapCreatProductRequestToProduct(requet api.CreateProductRequest) api.Produc
 	}
 }
 
-func MapProductToGetProductsResponse(products []api.Product) []api.GetProductsResponse {
+func MapProductArrayToGetProductsResponse(products []api.Product) []api.GetProductsResponse {
 	productsResponse := make([]api.GetProductsResponse, len(products))
 	for i := 0; i < len(products); i++ {
-		productsResponse[i] = api.GetProductsResponse{
-			Id:          products[i].Id,
-			Name:        products[i].Name,
-			Description: products[i].Description,
-			Price:       products[i].Price,
-			Stock:       products[i].Stock,
-		}
+		productsResponse[i] = MapProductToGetProductsResponse(products[i])
 	}
 	return productsResponse
+}
+
+func MapProductToGetProductsResponse(product api.Product) api.GetProductsResponse {
+	return api.GetProductsResponse{
+		Id:          product.Id,
+		Name:        product.Name,
+		Description: product.Description,
+		Price:       product.Price,
+		Stock:       product.Stock,
+	}
 }
