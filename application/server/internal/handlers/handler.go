@@ -29,6 +29,8 @@ func AddRouter(mux *http.ServeMux, repository *repository.Repository, redis *red
 	mux.HandleFunc("POST /user/info", handler.handleGetUserByEmail)
 	mux.HandleFunc("POST /products/create", handler.handleCreateNewProduct)
 	mux.HandleFunc("POST /products", handler.handleCreateNewProduct)
+	mux.HandleFunc("GET /products/{id}", handler.handleGetProductById)
+
 	mux.Handle("GET /swagger/", httpSwagger.WrapHandler)
 	return mux
 }

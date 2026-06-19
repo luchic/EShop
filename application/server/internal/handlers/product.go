@@ -7,6 +7,7 @@ import (
 	"shop/internal/api"
 	"shop/internal/product"
 	"shop/internal/services"
+	"strconv"
 )
 
 // handleCreateNewProduct godoc
@@ -101,8 +102,58 @@ func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request
 		http.Error(w, "Internal Error", http.StatusInternalServerError)
 		return
 	}
-	productsResponse := product.MapProductToGetProductsResponse(products)
+	productsResponse := product.MapProductArrayToGetProductsResponse(products)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(productsResponse)
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	requestId := services.GetRequestId(ctx)
+	_, err := h.auth.ValidateSession(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	id, err := getIdFromQuery(r)
+	if err != nil {
+		h.logger.Error(
+			"Couldn't parse id from query",
+			slog.String("request_id", requestId),
+			slog.String("Error", err.Error()))
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	productModel, err := h.repository.GetProductById(id)
+	if err != nil {
+		h.logger.Error(
+			"Couldn't get product from database",
+			slog.Int64("Product_id", id),
+			slog.String("request_id", requestId),
+			slog.String("Error", err.Error()))
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
+
+	responseProduct := product.MapProductToGetProductsResponse(productModel)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(responseProduct)
+	w.WriteHeader(http.StatusOK)
+}
+
+func getIdFromQuery(r *http.Request) (int64, error) {
+	value := r.PathValue("id")
+	num, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		return -1, err
+	}
+	return num, nil
 }
