@@ -102,3 +102,56 @@ func (r *Repository) GetUserByEmail(user_email string) (api.User, error) {
 	}
 	return user, nil
 }
+
+func (r *Repository) CreateProduct(product api.Product) error {
+	_, err := r.db.Exec(
+		"INSERT INTO products (name, description, price, stock) VALUES ($1, $2, $3, $4)",
+		product.Name,
+		product.Description,
+		product.Price,
+		product.Stock)
+	return err
+}
+
+func (r *Repository) GetPRoductsById(productId int64) (api.Product, error) {
+	return api.Product{}, nil
+}
+
+func (r *Repository) GetProductsByName(name string) ([]api.Product, error) {
+	rows, err := r.db.Query("SELECT id, name, description, price, stock, image_url, created_at FROM products WHERE name = $1", name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []api.Product
+
+	for rows.Next() {
+		var product api.Product
+		err := rows.Scan(
+			&product.Id,
+			&product.Name,
+			&product.Price,
+			&product.Stock,
+			&product.ImageUrl,
+			&product.CreatedAt)
+		if err != nil {
+			return products, err
+		}
+		products = append(products, product)
+	}
+
+	if err := rows.Err(); err != nil {
+		return products, nil
+	}
+
+	return products, nil
+}
+
+func (r *Repository) UpdateProduct() {
+
+}
+
+func (r *Repository) DeleteProduct() {
+
+}
