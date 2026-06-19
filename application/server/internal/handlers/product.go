@@ -9,6 +9,20 @@ import (
 	"shop/internal/services"
 )
 
+// handleCreateNewProduct godoc
+// @Summary Create a new product
+// @Description Creates a new product in the shop catalog
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param request body api.CreateProductRequest true "Product to create"
+// @Success 201 "Product created"
+// @Failure 400 {string} string "Bad Request"
+// @Failure 401 {string} string "Unauthorized"
+// @Failure 405 {string} string "Method not allowed"
+// @Failure 500 {string} string "Internal Error"
+// @Security ApiKeyAuth
+// @Router /products [post]
 func (h *Handler) handleCreateNewProduct(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -44,6 +58,20 @@ func (h *Handler) handleCreateNewProduct(
 	w.WriteHeader(http.StatusCreated)
 }
 
+// handleGetProductsByName godoc
+// @Summary Get products by name
+// @Description Searches for products matching the given name
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param request body api.GetProductsRequest true "Product name to search"
+// @Success 200 {array} api.GetProductsResponse "List of matching products"
+// @Failure 400 {string} string "Bad Request"
+// @Failure 401 {string} string "Unauthorized"
+// @Failure 405 {string} string "Method not allowed"
+// @Failure 500 {string} string "Internal Error"
+// @Security ApiKeyAuth
+// @Router /products/search [post]
 func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
