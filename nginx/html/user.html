@@ -18,6 +18,9 @@
         .result p { margin: 0.3rem 0; }
         .result strong { display: inline-block; width: 100px; }
         a { display: block; text-align: center; margin-top: 1rem; color: #333; font-size: 0.9rem; }
+        nav { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        nav a { margin: 0; font-size: 0.85rem; color: #555; text-decoration: none; }
+        nav a:hover { color: #000; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -29,7 +32,10 @@
         </form>
         <div id="error" class="message" style="display:none"></div>
         <div id="result" class="result" style="display:none"></div>
-        <a href="/">Back to Login</a>
+        <nav>
+            <a href="/">Login</a>
+            <a href="/create-product.html">Create Product</a>
+        </nav>
     </div>
 
     <script>
