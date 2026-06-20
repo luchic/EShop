@@ -20,7 +20,7 @@ func RequestIdMiddleware(next http.Handler) http.Handler {
 
 		r = r.WithContext(ctx)
 
-		slog.Debug(
+		slog.Info(
 			"Incomming request",
 			slog.String("Method", r.Method),
 			slog.String("Request URI", r.RequestURI),
@@ -29,7 +29,7 @@ func RequestIdMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 
-		slog.Debug(
+		slog.Info(
 			"Finished handling http req.",
 			slog.String("Request Id", id.String()))
 	})
