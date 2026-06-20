@@ -12,6 +12,8 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+const SESSION_ID_KEY = "session_id"
+
 const SESSION_DURATION = 30 * time.Minute
 
 type Service struct {
@@ -57,7 +59,7 @@ func (s *Service) CreateSession(user *api.User) (string, time.Time, error) {
 }
 
 func (s *Service) ValidateSession(r *http.Request) (api.SessionData, error) {
-	cocke, err := r.Cookie("session_id")
+	cocke, err := r.Cookie(SESSION_ID_KEY)
 	if err != nil {
 		return api.SessionData{}, err
 	}

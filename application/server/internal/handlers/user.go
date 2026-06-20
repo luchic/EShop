@@ -70,7 +70,12 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Set-Cookie", "session_id="+sessionId)
+	http.SetCookie(w, &http.Cookie{
+		Name:     auth.SESSION_ID_KEY,
+		Value:    sessionId,
+		Path:     "/",
+		HttpOnly: true,
+	})
 	w.WriteHeader(http.StatusCreated)
 	h.logger.Info("Finished method handleRegisterUser.", slog.String("request_id", requestId))
 }
@@ -143,7 +148,12 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 		ExpiresAt: expiresAt.Unix(),
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Set-Cookie", "session_id="+sessionId)
+	http.SetCookie(w, &http.Cookie{
+		Name:     auth.SESSION_ID_KEY,
+		Value:    sessionId,
+		Path:     "/",
+		HttpOnly: true,
+	})
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 	h.logger.Info("Finished method handleLoginUser.", slog.String("request_id", requestId))
@@ -174,7 +184,12 @@ func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.DeleteSessionById(sessionData.SessionId)
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Set-Cookie", "session_id=")
+	http.SetCookie(w, &http.Cookie{
+		Name:     auth.SESSION_ID_KEY,
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+	})
 	w.WriteHeader(http.StatusOK)
 	h.logger.Info("Finished method handleLogOut.", slog.String("request_id", requestId))
 }
