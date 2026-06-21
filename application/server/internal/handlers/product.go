@@ -88,7 +88,7 @@ func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request
 	}
 
 	var getProductsRequest api.GetProductsRequest
-	if err := json.NewDecoder(r.Body).Decode(&getProductsRequest); err == nil {
+	if err := json.NewDecoder(r.Body).Decode(&getProductsRequest); err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
