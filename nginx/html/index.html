@@ -24,7 +24,10 @@
         .message.error { background: #f8d7da; color: #721c24; }
         .user-info { text-align: center; }
         .user-info p { margin: 0.4rem 0; }
-        .user-info button { margin-top: 1rem; padding: 0.5rem 1.5rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .user-info button { margin-top: 0.5rem; padding: 0.5rem 1.5rem; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        .user-info button:hover { background: #555; }
+        .user-info button.logout { background: #dc3545; margin-top: 1rem; }
+        .user-info button.logout:hover { background: #c82333; }
         nav { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
         nav a { font-size: 0.85rem; color: #555; text-decoration: none; }
         nav a:hover { color: #000; text-decoration: underline; }
@@ -60,7 +63,10 @@
         <div id="user-section" class="user-info" style="display:none">
             <p><strong>Welcome!</strong></p>
             <p id="user-email"></p>
-            <button onclick="logout()">Logout</button>
+            <button onclick="location.href='/user.html'">User Info</button>
+            <button onclick="location.href='/create-product.html'">Create Product</button>
+            <button onclick="location.href='/profile.html'">My Profile</button>
+            <button class="logout" onclick="logout()">Logout</button>
         </div>
         <nav>
             <a href="/user.html">User Info</a>
@@ -145,7 +151,8 @@
             }
         }
 
-        function logout() {
+        async function logout() {
+            await fetch('/app/user/logout');
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('user-section').style.display = 'none';
             document.getElementById('login-form').reset();
