@@ -166,7 +166,7 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 // @Failure      400   {string}  string  "Bad request"
 // @Failure      401   {string}  string  "Unauthorized"
 // @Failure      500   {string}  string  "Internal server error"
-// @Router       /user/info [post]
+// @Router       /user/logout [get]
 func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
@@ -194,8 +194,8 @@ func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 	h.logger.Info("Finished method handleLogOut.", slog.String("request_id", requestId))
 }
 
-// handleLoginUser godoc
-// @Summary      Ger User
+// handleGetUserByEmail godoc
+// @Summary      Get User
 // @Tags         users
 // @Accept       json
 // @Produce      json
@@ -248,7 +248,7 @@ func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleGetUserProfile godoc
-// @Summary      Ger User Profile
+// @Summary      Get User Profile
 // @Tags         users
 // @Produce      json
 // @Success      200   {object}  api.GetUserProfileResponse
@@ -277,7 +277,7 @@ func (h *Handler) handleGetUserProfile(w http.ResponseWriter, r *http.Request) {
 	userResponse := api.GetUserProfileResponse{
 		FirstName:  user.FirstName,
 		SecondName: user.SecondName,
-		Email:      user.SecondName,
+		Email:      user.Email,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
