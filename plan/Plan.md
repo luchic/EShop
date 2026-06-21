@@ -122,6 +122,10 @@ shop/
 
 
 ## TODO:
-* Add indexes to email
-* Check if I can use ssesion to get user info
+* Add indexes to email.
+* Check if I can use session to get user info.
+* I want to create a simple notification system. To begin, I want to notify a user if he is subscribed — send a notification when a new product is created.
 
+## Strange Bugs
+
+* Sometimes I can get two cookies with session_id in path: / and /app/user
