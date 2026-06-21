@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theodor's Emporium — Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 360px; text-align: center; }
+        h1 { margin-bottom: 1.5rem; font-size: 1.4rem; }
+        p { margin: 0.4rem 0; }
+        .buttons { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem; }
+        .buttons button { padding: 0.6rem; background: #333; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        .buttons button:hover { background: #555; }
+        .buttons button.logout { background: #dc3545; margin-top: 0.5rem; }
+        .buttons button.logout:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Theodor's Emporium</h1>
+        <p><strong>Welcome!</strong></p>
+        <p id="user-email"></p>
+        <div class="buttons">
+            <button onclick="location.href='/user.html'">User Info</button>
+            <button onclick="location.href='/create-product.html'">Create Product</button>
+            <button onclick="location.href='/profile.html'">My Profile</button>
+            <button class="logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        async function checkAuth() {
+            try {
+                const res = await fetch('/app/user/me');
+                if (!res.ok) {
+                    location.href = '/';
+                    return;
+                }
+                const user = await res.json();
+                document.getElementById('user-email').textContent = user.email;
+            } catch {
+                location.href = '/';
+            }
+        }
+
+        async function logout() {
+            await fetch('/app/user/logout');
+            location.href = '/';
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
