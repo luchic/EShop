@@ -103,6 +103,31 @@ func (r *Repository) GetUserByEmail(user_email string) (api.User, error) {
 	return user, nil
 }
 
+func (r *Repository) GetUserById(userId int64) (api.User, error) {
+	var user api.User
+
+	rows := r.db.QueryRow("SELECT id, first_name, second_name, email, role, password, created_at FROM users WHERE id = $1", userId)
+
+	err := rows.Scan(
+		&user.Id,
+		&user.FirstName,
+		&user.SecondName,
+		&user.Email,
+		&user.Role,
+		&user.Password,
+		&user.CreatedAt,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("GetUserById %d: no such user", userId)
+		}
+		return user, fmt.Errorf("GetUserById %d: %v", userId, err)
+	}
+	return user, nil
+}
+
 func (r *Repository) CreateProduct(product api.Product) error {
 	_, err := r.db.Exec(
 		"INSERT INTO products (name, description, price, stock) VALUES ($1, $2, $3, $4)",
