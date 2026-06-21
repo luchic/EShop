@@ -42,3 +42,9 @@ type User struct {
 	Password   []byte    `db:"password"`
 	CreatedAt  time.Time `db:"created_at"`
 }
+
+type GetUserProfileResponse struct {
+	FirstName  string `json:"first_name"`
+	SecondName string `json:"second_name"`
+	Email      string `json:"email"`
+}

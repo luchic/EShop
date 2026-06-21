@@ -70,7 +70,12 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Set-Cookie", "session_id="+sessionId)
+	http.SetCookie(w, &http.Cookie{
+		Name:     auth.SESSION_ID_KEY,
+		Value:    sessionId,
+		Path:     "/",
+		HttpOnly: true,
+	})
 	w.WriteHeader(http.StatusCreated)
 	h.logger.Info("Finished method handleRegisterUser.", slog.String("request_id", requestId))
 }
@@ -143,7 +148,12 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 		ExpiresAt: expiresAt.Unix(),
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Set-Cookie", "session_id="+sessionId)
+	http.SetCookie(w, &http.Cookie{
+		Name:     auth.SESSION_ID_KEY,
+		Value:    sessionId,
+		Path:     "/",
+		HttpOnly: true,
+	})
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 	h.logger.Info("Finished method handleLoginUser.", slog.String("request_id", requestId))
@@ -156,7 +166,7 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 // @Failure      400   {string}  string  "Bad request"
 // @Failure      401   {string}  string  "Unauthorized"
 // @Failure      500   {string}  string  "Internal server error"
-// @Router       /user/info [post]
+// @Router       /user/logout [get]
 func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
@@ -174,13 +184,18 @@ func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.DeleteSessionById(sessionData.SessionId)
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Set-Cookie", "session_id=")
+	http.SetCookie(w, &http.Cookie{
+		Name:     auth.SESSION_ID_KEY,
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+	})
 	w.WriteHeader(http.StatusOK)
 	h.logger.Info("Finished method handleLogOut.", slog.String("request_id", requestId))
 }
 
-// handleLoginUser godoc
-// @Summary      Ger User
+// handleGetUserByEmail godoc
+// @Summary      Get User
 // @Tags         users
 // @Accept       json
 // @Produce      json
@@ -230,4 +245,42 @@ func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 	h.logger.Info("Finished method handleGetUserByEmail.", slog.String("request_id", requestId))
+}
+
+// handleGetUserProfile godoc
+// @Summary      Get User Profile
+// @Tags         users
+// @Produce      json
+// @Success      200   {object}  api.GetUserProfileResponse
+// @Failure      400   {string}  string  "Bad request"
+// @Failure      500   {string}  string  "Internal server error"
+// @Router       /user/me [get]
+func (h *Handler) handleGetUserProfile(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	requestId := services.GetRequestId(ctx)
+	sessionData, err := h.auth.ValidateSession(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	user, err := h.repository.GetUserById(sessionData.UserID)
+	if err != nil {
+		h.logger.Info(
+			"Failed to GetUserById in handleGetUserProfile.",
+			slog.String("request_id", requestId),
+			slog.String("Error:", err.Error()))
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
+
+	userResponse := api.GetUserProfileResponse{
+		FirstName:  user.FirstName,
+		SecondName: user.SecondName,
+		Email:      user.Email,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(userResponse)
+	w.WriteHeader(http.StatusOK)
 }

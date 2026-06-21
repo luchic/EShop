@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Product</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 400px; }
+        h1 { text-align: center; margin-bottom: 1.5rem; font-size: 1.4rem; }
+        form { display: flex; flex-direction: column; gap: 0.75rem; }
+        label { font-size: 0.85rem; font-weight: 600; color: #333; }
+        input, textarea { padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit; width: 100%; }
+        textarea { resize: vertical; min-height: 80px; }
+        input:focus, textarea:focus { outline: none; border-color: #333; }
+        button[type="submit"] { padding: 0.7rem; background: #333; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
+        button[type="submit"]:hover { background: #555; }
+        .message { padding: 0.6rem; border-radius: 4px; text-align: center; margin-top: 0.5rem; font-size: 0.9rem; display: none; }
+        .message.error { background: #f8d7da; color: #721c24; }
+        .message.success { background: #d4edda; color: #155724; }
+        a { display: block; text-align: center; margin-top: 1rem; color: #333; font-size: 0.9rem; }
+        nav { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        nav a { margin: 0; font-size: 0.85rem; color: #555; text-decoration: none; }
+        nav a:hover { color: #000; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Product</h1>
+        <form id="form">
+            <input type="text" id="name" placeholder="Product name" required>
+            <textarea id="description" placeholder="Product description" required></textarea>
+            <label for="price">Price</label>
+            <input type="number" id="price" placeholder="Price" min="0" step="0.01" required>
+            <label for="price">Stock</label>
+            <input type="number" id="stock" placeholder="Stock" min="0" step="1" required>
+            <button type="submit">Create</button>
+        </form>
+        <div id="msg" class="message"></div>
+        <nav>
+            <a href="/">Login</a>
+            <a href="/user.html">User Info</a>
+        </nav>
+    </div>
+
+    <script>
+        const msg = document.getElementById('msg');
+
+        document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            msg.style.display = 'none';
+
+            const body = {
+                name: document.getElementById('name').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                price: parseFloat(document.getElementById('price').value),
+                stock: parseInt(document.getElementById('stock').value, 10),
+            };
+
+            try {
+                const res = await fetch('/app/products/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+
+                if (res.ok) {
+                    msg.textContent = 'Product created successfully';
+                    msg.className = 'message success';
+                    msg.style.display = 'block';
+                    e.target.reset();
+                } else {
+                    const data = await res.text();
+                    msg.textContent = data || 'Failed to create product';
+                    msg.className = 'message error';
+                    msg.style.display = 'block';
+                }
+            } catch {
+                msg.textContent = 'Connection error';
+                msg.className = 'message error';
+                msg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
