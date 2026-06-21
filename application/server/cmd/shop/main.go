@@ -9,8 +9,10 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	_ "shop/docs"
+	"shop/internal/auth"
 	"shop/internal/config"
 	"shop/internal/handlers"
 	"shop/internal/repository"
@@ -24,13 +26,12 @@ func main() {
 		return
 	}
 
-	repo, err := repository.NewRepository(cfg)
+	db, err := repository.NewDB(cfg)
 	if err != nil {
 		fmt.Println("Couldn't create connection to database: ", err)
 		return
 	}
-
-	defer repo.Close()
+	defer db.Close()
 
 	redis, err := repository.NewRedis(cfg)
 	if err != nil {
@@ -40,10 +41,22 @@ func main() {
 
 	defer redis.Close()
 
-	mux := http.NewServeMux()
-	handlers.AddRouter(mux, repo, redis)
-	wrappedMux := services.RequestIdMiddleware(mux)
+	logger := slog.Default()
+	authService := auth.NewService(redis)
 
+	userRepo := repository.NewPostgresUserRepository(db)
+	productRepo := repository.NewPostgresProductRepository(db)
+
+	defualtHandler := handlers.NewDefualtHandler()
+	userHandler := handlers.NewUserHandler(logger, authService, userRepo)
+	productHandler := handlers.NewProductHandler(logger, authService, productRepo)
+
+	mux := http.NewServeMux()
+	defualtHandler.AddRouter(mux)
+	userHandler.AddUserHandlerRouter(mux)
+	productHandler.AddProductHandlerRouter(mux)
+
+	wrappedMux := services.RequestIdMiddleware(mux)
 	fmt.Printf("Listen %s\n", cfg.Host)
 	http.ListenAndServe(cfg.Host, wrappedMux)
 }
