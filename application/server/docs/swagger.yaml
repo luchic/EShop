@@ -34,6 +34,15 @@ definitions:
       email:
         type: string
     type: object
+  api.GetUserProfileResponse:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      second_name:
+        type: string
+    type: object
   api.LoginResponse:
     properties:
       email:
@@ -127,6 +136,44 @@ paths:
       summary: Create a new product
       tags:
       - products
+  /products/{id}:
+    get:
+      description: Return the product by id
+      parameters:
+      - description: Product ID
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product found
+          schema:
+            $ref: '#/definitions/api.GetProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "405":
+          description: Method not allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get products by id
+      tags:
+      - products
   /products/search:
     post:
       consumes:
@@ -199,7 +246,7 @@ paths:
           description: Internal server error
           schema:
             type: string
-      summary: Ger User
+      summary: Get User
       tags:
       - users
   /user/login:
@@ -233,6 +280,46 @@ paths:
           schema:
             type: string
       summary: Login
+      tags:
+      - users
+  /user/logout:
+    get:
+      responses:
+        "200":
+          description: Logged out successfully
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Logout User
+      tags:
+      - users
+  /user/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.GetUserProfileResponse'
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get User Profile
       tags:
       - users
   /user/register:
