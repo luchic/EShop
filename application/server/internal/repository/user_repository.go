@@ -10,12 +10,11 @@ type PostgresUserRepository struct {
 	db *sql.DB
 }
 
-func NewPostgresProductRepository(db *sql.DB) *PostgresUserRepository {
-
-	return &PostgresUserRepository{db: db}
+func NewPostgresUserRepository(db *sql.DB) PostgresUserRepository {
+	return PostgresUserRepository{db: db}
 }
 
-func (r *PostgresUserRepository) CreateUser(user api.User) error {
+func (r PostgresUserRepository) CreateUser(user api.User) error {
 	_, err := r.db.Exec(
 		"INSERT INTO users (first_name, second_name, email, password, role) VALUES ($1, $2, $3, $4, $5)",
 		user.FirstName,
@@ -26,10 +25,12 @@ func (r *PostgresUserRepository) CreateUser(user api.User) error {
 	return err
 }
 
-func (r *PostgresUserRepository) GetUserByEmail(user_email string) (api.User, error) {
+func (r PostgresUserRepository) GetUserByEmail(userEmail string) (api.User, error) {
 	var user api.User
 
-	rows := r.db.QueryRow("SELECT id, first_name, second_name, email, role, password, created_at FROM users WHERE email = $1", user_email)
+	rows := r.db.QueryRow(
+		"SELECT id, first_name, second_name, email, role, password, created_at FROM users WHERE email = $1",
+		userEmail)
 
 	err := rows.Scan(
 		&user.Id,
@@ -44,14 +45,14 @@ func (r *PostgresUserRepository) GetUserByEmail(user_email string) (api.User, er
 	if err != nil {
 		fmt.Println(err)
 		if err == sql.ErrNoRows {
-			return user, fmt.Errorf("GetUserByEmail %s: no such user", user_email)
+			return user, fmt.Errorf("GetUserByEmail %s: no such user", userEmail)
 		}
-		return user, fmt.Errorf("GetUserByEmail %s: %v", user_email, err)
+		return user, fmt.Errorf("GetUserByEmail %s: %v", userEmail, err)
 	}
 	return user, nil
 }
 
-func (r *PostgresUserRepository) GetUserById(userId int64) (api.User, error) {
+func (r PostgresUserRepository) GetUserById(userId int64) (api.User, error) {
 	var user api.User
 
 	rows := r.db.QueryRow("SELECT id, first_name, second_name, email, role, password, created_at FROM users WHERE id = $1", userId)

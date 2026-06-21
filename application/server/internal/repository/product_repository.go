@@ -10,11 +10,11 @@ type PostgresProductRepository struct {
 	db *sql.DB
 }
 
-func NewPostgresUserRepository(db *sql.DB) *PostgresProductRepository {
-	return &PostgresProductRepository{db: db}
+func NewPostgresProductRepository(db *sql.DB) PostgresProductRepository {
+	return PostgresProductRepository{db: db}
 }
 
-func (r *PostgresProductRepository) CreateProduct(product api.Product) error {
+func (r PostgresProductRepository) CreateProduct(product api.Product) error {
 	_, err := r.db.Exec(
 		"INSERT INTO products (name, description, price, stock) VALUES ($1, $2, $3, $4)",
 		product.Name,
@@ -24,10 +24,10 @@ func (r *PostgresProductRepository) CreateProduct(product api.Product) error {
 	return err
 }
 
-func (r *PostgresProductRepository) GetProductById(productId int64) (api.Product, error) {
+func (r PostgresProductRepository) GetProductById(id int64) (api.Product, error) {
 	row := r.db.QueryRow(
 		"SELECT id, name, description, price, stock, image_url, created_at FROM products WHERE id = $1",
-		productId)
+		id)
 
 	var product api.Product
 	err := row.Scan(
@@ -43,7 +43,7 @@ func (r *PostgresProductRepository) GetProductById(productId int64) (api.Product
 	return product, nil
 }
 
-func (r *PostgresProductRepository) GetProductsByName(name string) ([]api.Product, error) {
+func (r PostgresProductRepository) GetProductsByName(name string) ([]api.Product, error) {
 	rows, err := r.db.Query(
 		"SELECT id, name, description, price, stock, image_url, created_at FROM products WHERE name = $1",
 		name)
@@ -76,10 +76,10 @@ func (r *PostgresProductRepository) GetProductsByName(name string) ([]api.Produc
 	return products, nil
 }
 
-func (r *PostgresProductRepository) UpdateProduct() {
+// func (r *PostgresProductRepository) UpdateProduct() {
 
-}
+// }
 
-func (r *PostgresProductRepository) DeleteProduct() {
+// func (r *PostgresProductRepository) DeleteProduct() {
 
-}
+// }
