@@ -108,6 +108,19 @@ func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request
 	w.WriteHeader(http.StatusOK)
 }
 
+// handleGetProductById godoc
+// @Summary Get products by id
+// @Description Return the product by id
+// @Tags products
+// @Produce json
+// @Param id query int64 true "Product ID"
+// @Success 200 {array} api.GetProductsResponse "Product found"
+// @Failure 400 {string} string "Bad Request"
+// @Failure 401 {string} string "Unauthorized"
+// @Failure 405 {string} string "Method not allowed"
+// @Failure 500 {string} string "Internal Error"
+// @Security ApiKeyAuth
+// @Router /products/{id}" [get]
 func (h *Handler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)

@@ -247,7 +247,14 @@ func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 	h.logger.Info("Finished method handleGetUserByEmail.", slog.String("request_id", requestId))
 }
 
-
+// handleGetUserProfile godoc
+// @Summary      Ger User Profile
+// @Tags         users
+// @Produce      json
+// @Success      200   {object}  api.GetUserProfileResponse
+// @Failure      400   {string}  string  "Bad request"
+// @Failure      500   {string}  string  "Internal server error"
+// @Router       /user/me [get]
 func (h *Handler) handleGetUserProfile(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
