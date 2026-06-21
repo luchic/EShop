@@ -5,10 +5,42 @@ import (
 	"log/slog"
 	"net/http"
 	"shop/internal/api"
+	"shop/internal/auth"
 	"shop/internal/product"
+	"shop/internal/repository"
 	"shop/internal/services"
 	"strconv"
 )
+
+type ProductHandler struct {
+	logger     *slog.Logger
+	auth       *auth.Service
+	repository repository.ProductRepository
+}
+
+func NewProductHandler(
+	logger *slog.Logger,
+	authService *auth.Service,
+	productRepo repository.ProductRepository,
+) *ProductHandler {
+	return &ProductHandler{
+		logger:     logger,
+		auth:       authService,
+		repository: productRepo,
+	}
+}
+
+func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http.ServeMux {
+	if mux == nil {
+		return mux
+	}
+
+	mux.HandleFunc("POST /products/create", handler.handleCreateNewProduct)
+	mux.HandleFunc("POST /products", handler.handleCreateNewProduct)
+	mux.HandleFunc("GET /products/{id}", handler.handleGetProductById)
+
+	return mux
+}
 
 // handleCreateNewProduct godoc
 // @Summary Create a new product
@@ -24,7 +56,7 @@ import (
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
 // @Router /products [post]
-func (h *Handler) handleCreateNewProduct(
+func (h *ProductHandler) handleCreateNewProduct(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
@@ -73,7 +105,7 @@ func (h *Handler) handleCreateNewProduct(
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
 // @Router /products/search [post]
-func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
 	_, err := h.auth.ValidateSession(r)
@@ -121,7 +153,7 @@ func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
 // @Router /products/{id} [get]
-func (h *Handler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
 	_, err := h.auth.ValidateSession(r)
