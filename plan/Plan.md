@@ -119,3 +119,9 @@ shop/
 4. Phase 4 cart is Redis-heavy — good warm-up before Kafka
 5. Phase 5 is the Kafka payoff — keep the consumer simple at first
 6. Frontend last — use curl/Postman until then
+
+
+## TODO:
+* Add indexes to email
+* Check if I can use ssesion to get user info
+
