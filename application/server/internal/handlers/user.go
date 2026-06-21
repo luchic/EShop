@@ -246,3 +246,34 @@ func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 	h.logger.Info("Finished method handleGetUserByEmail.", slog.String("request_id", requestId))
 }
+
+
+func (h *Handler) handleGetUserProfile(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	requestId := services.GetRequestId(ctx)
+	sessionData, err := h.auth.ValidateSession(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	user, err := h.repository.GetUserById(sessionData.UserID)
+	if err != nil {
+		h.logger.Info(
+			"Failed to GetUserById in handleGetUserProfile.",
+			slog.String("request_id", requestId),
+			slog.String("Error:", err.Error()))
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
+
+	userResponse := api.GetUserProfileResponse{
+		FirstName:  user.FirstName,
+		SecondName: user.SecondName,
+		Email:      user.SecondName,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(userResponse)
+	w.WriteHeader(http.StatusOK)
+}
