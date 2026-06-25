@@ -59,6 +59,7 @@ func (r PostgresProductRepository) GetProductsByName(name string) ([]api.Product
 		err := rows.Scan(
 			&product.Id,
 			&product.Name,
+			&product.Description,
 			&product.Price,
 			&product.Stock,
 			&product.ImageUrl,
