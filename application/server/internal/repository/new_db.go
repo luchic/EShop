@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"shop/internal/config"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func NewDB(cfg *config.Config) (*sql.DB, error) {
