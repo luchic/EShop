@@ -38,6 +38,7 @@ func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http
 	mux.HandleFunc("POST /products/create", handler.handleCreateNewProduct)
 	mux.HandleFunc("POST /products", handler.handleCreateNewProduct)
 	mux.HandleFunc("GET /products/{id}", handler.handleGetProductById)
+	mux.HandleFunc("POST /products/search", handler.handleGetProductsByName)
 
 	return mux
 }
