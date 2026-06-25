@@ -47,6 +47,7 @@
             try {
                 const res = await fetch('/app/user/info', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: document.getElementById('email').value })
                 });

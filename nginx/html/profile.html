@@ -34,7 +34,7 @@
     <script>
         async function loadProfile() {
             try {
-                const res = await fetch('/app/user/me');
+                const res = await fetch('/app/user/me', { credentials: 'include' });
                 if (!res.ok) {
                     document.getElementById('error').innerHTML =
                         res.status === 401

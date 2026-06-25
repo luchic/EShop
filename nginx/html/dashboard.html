@@ -33,7 +33,7 @@
     <script>
         async function checkAuth() {
             try {
-                const res = await fetch('/app/user/me');
+                const res = await fetch('/app/user/me', { credentials: 'include' });
                 if (!res.ok) {
                     location.href = '/';
                     return;
@@ -46,7 +46,7 @@
         }
 
         async function logout() {
-            await fetch('/app/user/logout');
+            await fetch('/app/user/logout', { credentials: 'include' });
             location.href = '/';
         }
 

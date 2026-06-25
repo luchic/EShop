@@ -80,6 +80,7 @@
             try {
                 const res = await fetch('/app/user/login', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         email: document.getElementById('login-email').value,
@@ -101,6 +102,7 @@
             try {
                 const res = await fetch('/app/user/register', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         first_name: document.getElementById('reg-first').value,
