@@ -19,8 +19,8 @@
         .product .name { font-weight: bold; font-size: 1rem; }
         .product .details { color: #555; margin-top: 0.3rem; }
         .no-results { text-align: center; color: #888; margin-top: 1rem; font-size: 0.9rem; }
-        nav { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
-        nav a { font-size: 0.85rem; color: #555; text-decoration: none; }
+        nav { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        nav a { font-size: 0.85rem; color: #555; text-decoration: none; white-space: nowrap; padding: 0.3rem 0.5rem; }
         nav a:hover { color: #000; text-decoration: underline; }
     </style>
 </head>
@@ -36,6 +36,9 @@
         <nav>
             <a href="/dashboard.html">Dashboard</a>
             <a href="/create-product.html">Create Product</a>
+            <a href="/profile.html">Profile</a>
+            <a href="/user.html">User Info</a>
+            <a href="/" onclick="fetch('/app/user/logout',{credentials:'include'})">Logout</a>
         </nav>
     </div>
 

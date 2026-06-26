@@ -14,8 +14,8 @@
         .profile strong { display: inline-block; width: 110px; }
         .message { padding: 0.6rem; border-radius: 4px; text-align: center; font-size: 0.9rem; background: #f8d7da; color: #721c24; }
         .message a { color: #721c24; font-weight: bold; }
-        nav { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
-        nav a { font-size: 0.85rem; color: #555; text-decoration: none; }
+        nav { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        nav a { font-size: 0.85rem; color: #555; text-decoration: none; white-space: nowrap; padding: 0.3rem 0.5rem; }
         nav a:hover { color: #000; text-decoration: underline; }
     </style>
 </head>
@@ -25,9 +25,11 @@
         <div id="error" class="message" style="display:none"></div>
         <div id="profile" class="profile" style="display:none"></div>
         <nav>
-            <a href="/">Login</a>
-            <a href="/user.html">User Info</a>
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/search.html">Search</a>
             <a href="/create-product.html">Create Product</a>
+            <a href="/user.html">User Info</a>
+            <a href="/" onclick="fetch('/app/user/logout',{credentials:'include'})">Logout</a>
         </nav>
     </div>
 
