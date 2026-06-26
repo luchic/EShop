@@ -7,27 +7,33 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: system-ui, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 360px; text-align: center; }
+        .layout { display: flex; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .sidebar { width: 56px; background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding: 1rem 0; gap: 0.25rem; }
+        .sidebar a { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: #999; text-decoration: none; transition: background 0.15s, color 0.15s; position: relative; }
+        .sidebar a:hover { background: #333; color: #fff; }
+        .sidebar a.active { background: #333; color: #fff; }
+        .sidebar .spacer { flex: 1; }
+        .sidebar a:hover::after { content: attr(data-tip); position: absolute; left: 100%; margin-left: 8px; background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; white-space: nowrap; pointer-events: none; z-index: 10; }
+        .container { background: white; padding: 2rem; width: 360px; text-align: center; }
         h1 { margin-bottom: 1.5rem; font-size: 1.4rem; }
         p { margin: 0.4rem 0; }
-        .buttons { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem; }
-        .buttons button { padding: 0.6rem; background: #333; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
-        .buttons button:hover { background: #555; }
-        .buttons button.logout { background: #dc3545; margin-top: 0.5rem; }
-        .buttons button.logout:hover { background: #c82333; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Theodor's Emporium</h1>
-        <p><strong>Welcome!</strong></p>
-        <p id="user-email"></p>
-        <div class="buttons">
-            <button onclick="location.href='/user.html'">User Info</button>
-            <button onclick="location.href='/create-product.html'">Create Product</button>
-            <button onclick="location.href='/profile.html'">My Profile</button>
-            <button onclick="location.href='/search.html'">Search Products</button>
-            <button class="logout" onclick="logout()">Logout</button>
+    <div class="layout">
+        <aside class="sidebar">
+            <a href="/dashboard.html" class="active" data-tip="Dashboard"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg></a>
+            <a href="/search.html" data-tip="Search"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg></a>
+            <a href="/create-product.html" data-tip="Create Product"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></a>
+            <a href="/profile.html" data-tip="Profile"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0114 0v1"/></svg></a>
+            <a href="/user.html" data-tip="User Info"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="4"/><path d="M2 21v-1a7 7 0 0114 0v1"/><path d="M20 8v4M20 16v0" stroke-linecap="round"/></svg></a>
+            <div class="spacer"></div>
+            <a href="/" data-tip="Logout" onclick="fetch('/app/user/logout',{credentials:'include'})"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></a>
+        </aside>
+        <div class="container">
+            <h1>Theodor's Emporium</h1>
+            <p><strong>Welcome!</strong></p>
+            <p id="user-email"></p>
         </div>
     </div>
 
@@ -44,11 +50,6 @@
             } catch {
                 location.href = '/';
             }
-        }
-
-        async function logout() {
-            await fetch('/app/user/logout', { credentials: 'include' });
-            location.href = '/';
         }
 
         checkAuth();
