@@ -8,7 +8,7 @@ func MapCreatProductRequestToProduct(requet api.CreateProductRequest) api.Produc
 		Description: requet.Description,
 		Price:       requet.Price,
 		Stock:       requet.Stock,
-		ImageUrl:    "",
+		ImageUrl:    nil,
 	}
 }
 

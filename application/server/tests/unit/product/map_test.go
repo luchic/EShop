@@ -28,7 +28,7 @@ func TestMapCreateProductRequestToProduct(t *testing.T) {
 	if result.Stock != request.Stock {
 		t.Errorf("Stock = %v, want %v", result.Stock, request.Stock)
 	}
-	if result.ImageUrl != "" {
+	if result.ImageUrl != nil {
 		t.Errorf("ImageUrl = %q, want empty string", result.ImageUrl)
 	}
 }
@@ -40,7 +40,7 @@ func TestMapProductToGetProductsResponse(t *testing.T) {
 		Description: "A test product",
 		Price:       29.99,
 		Stock:       50,
-		ImageUrl:    "http://example.com/image.png",
+		ImageUrl:    nil,
 	}
 
 	result := product.MapProductToGetProductsResponse(p)

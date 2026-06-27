@@ -8,7 +8,7 @@ type Product struct {
 	Description string    `db:"description"`
 	Price       float32   `db:"price"`
 	Stock       int32     `db:"stock"`
-	ImageUrl    string    `db:"image_url"`
+	ImageUrl    *string   `db:"image_url"`
 	CreatedAt   time.Time `db:"created_at"`
 }
 
