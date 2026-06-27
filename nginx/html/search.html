@@ -22,7 +22,8 @@
         button[type="submit"]:hover { background: #555; }
         .message { padding: 0.6rem; border-radius: 4px; text-align: center; margin-top: 1rem; font-size: 0.9rem; background: #f8d7da; color: #721c24; }
         .results { margin-top: 1rem; }
-        .product { padding: 0.8rem; background: #f8f9fa; border-radius: 4px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .product { display: block; padding: 0.8rem; background: #f8f9fa; border-radius: 4px; margin-bottom: 0.5rem; font-size: 0.9rem; text-decoration: none; color: inherit; transition: background 0.15s; }
+        .product:hover { background: #eee; }
         .product .name { font-weight: bold; font-size: 1rem; }
         .product .details { color: #555; margin-top: 0.3rem; }
         .no-results { text-align: center; color: #888; margin-top: 1rem; font-size: 0.9rem; }
@@ -52,7 +53,14 @@
 
     <script>
         async function search(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
+            const query = document.getElementById('query').value;
+            if (!query) return;
+
+            const url = new URL(location);
+            url.searchParams.set('q', query);
+            history.replaceState(null, '', url);
+
             document.getElementById('error').style.display = 'none';
             document.getElementById('results').innerHTML = '';
 
@@ -60,7 +68,7 @@
                 const res = await fetch('/app/products/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: document.getElementById('query').value })
+                    body: JSON.stringify({ name: query })
                 });
 
                 if (!res.ok) {
@@ -77,16 +85,22 @@
                 }
 
                 document.getElementById('results').innerHTML = products.map(p =>
-                    `<div class="product">
+                    `<a href="/product.html?id=${p.id}" class="product">
                         <div class="name">${p.name}</div>
                         <div class="details">${p.description || 'No description'}</div>
                         <div class="details">Price: $${p.price.toFixed(2)} | Stock: ${p.stock}</div>
-                    </div>`
+                    </a>`
                 ).join('');
             } catch {
                 document.getElementById('error').textContent = 'Connection error';
                 document.getElementById('error').style.display = 'block';
             }
+        }
+
+        const q = new URLSearchParams(location.search).get('q');
+        if (q) {
+            document.getElementById('query').value = q;
+            search();
         }
     </script>
 </body>
