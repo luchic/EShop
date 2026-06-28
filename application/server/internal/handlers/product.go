@@ -48,7 +48,7 @@ func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http
 	handleGetProductsByName := services.AuthIsReqiuered(
 		handler.auth,
 		handler.handleGetProductsByName)
-	mux.HandleFunc("POST /products/search", handleGetProductsByName)
+	mux.HandleFunc("POST /products", handleGetProductsByName)
 
 	return mux
 }
@@ -66,7 +66,7 @@ func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http
 // @Failure 405 {string} string "Method not allowed"
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
-// @Router /products [post]
+// @Router /products/create [post]
 func (h *ProductHandler) handleCreateNewProduct(
 	w http.ResponseWriter,
 	r *http.Request,
@@ -109,7 +109,7 @@ func (h *ProductHandler) handleCreateNewProduct(
 // @Failure 405 {string} string "Method not allowed"
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
-// @Router /products/search [post]
+// @Router /products [post]
 func (h *ProductHandler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
