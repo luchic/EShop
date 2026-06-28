@@ -1,14 +1,17 @@
 package product
 
-import "shop/internal/api"
+import (
+	"database/sql"
+	"shop/internal/api"
+)
 
 func MapCreatProductRequestToProduct(requet api.CreateProductRequest) api.Product {
 	return api.Product{
 		Name:        requet.Name,
-		Description: requet.Description,
+		Description: sql.NullString{String: requet.Description, Valid: true},
 		Price:       requet.Price,
 		Stock:       requet.Stock,
-		ImageUrl:    nil,
+		ImageUrl:    sql.NullString{Valid: false},
 	}
 }
 
@@ -21,10 +24,15 @@ func MapProductArrayToGetProductsResponse(products []api.Product) []api.GetProdu
 }
 
 func MapProductToGetProductsResponse(product api.Product) api.GetProductsResponse {
+	var description string = ""
+	if product.Description.Valid {
+		description = product.Description.String
+	}
+
 	return api.GetProductsResponse{
 		Id:          product.Id,
 		Name:        product.Name,
-		Description: product.Description,
+		Description: description,
 		Price:       product.Price,
 		Stock:       product.Stock,
 	}

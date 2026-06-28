@@ -1,6 +1,7 @@
 package product
 
 import (
+	"database/sql"
 	"shop/internal/api"
 	"shop/internal/product"
 	"testing"
@@ -19,8 +20,8 @@ func TestMapCreateProductRequestToProduct(t *testing.T) {
 	if result.Name != request.Name {
 		t.Errorf("Name = %q, want %q", result.Name, request.Name)
 	}
-	if result.Description != request.Description {
-		t.Errorf("Description = %q, want %q", result.Description, request.Description)
+	if !result.Description.Valid || result.Description.String != request.Description {
+		t.Errorf("Description = %v, want Valid=true, String=%q", result.Description, request.Description)
 	}
 	if result.Price != request.Price {
 		t.Errorf("Price = %v, want %v", result.Price, request.Price)
@@ -28,8 +29,8 @@ func TestMapCreateProductRequestToProduct(t *testing.T) {
 	if result.Stock != request.Stock {
 		t.Errorf("Stock = %v, want %v", result.Stock, request.Stock)
 	}
-	if result.ImageUrl != nil {
-		t.Errorf("ImageUrl = %q, want empty string", result.ImageUrl)
+	if result.ImageUrl.Valid {
+		t.Errorf("ImageUrl = %v, want Valid=false", result.ImageUrl)
 	}
 }
 
@@ -37,10 +38,10 @@ func TestMapProductToGetProductsResponse(t *testing.T) {
 	p := api.Product{
 		Id:          1,
 		Name:        "Test Product",
-		Description: "A test product",
+		Description: sql.NullString{String: "A test product", Valid: true},
 		Price:       29.99,
 		Stock:       50,
-		ImageUrl:    nil,
+		ImageUrl:    sql.NullString{Valid: false},
 	}
 
 	result := product.MapProductToGetProductsResponse(p)
@@ -51,14 +52,30 @@ func TestMapProductToGetProductsResponse(t *testing.T) {
 	if result.Name != p.Name {
 		t.Errorf("Name = %q, want %q", result.Name, p.Name)
 	}
-	if result.Description != p.Description {
-		t.Errorf("Description = %q, want %q", result.Description, p.Description)
+	if result.Description != p.Description.String {
+		t.Errorf("Description = %q, want %q", result.Description, p.Description.String)
 	}
 	if result.Price != p.Price {
 		t.Errorf("Price = %v, want %v", result.Price, p.Price)
 	}
 	if result.Stock != p.Stock {
 		t.Errorf("Stock = %v, want %v", result.Stock, p.Stock)
+	}
+}
+
+func TestMapProductToGetProductsResponse_NullDescription(t *testing.T) {
+	p := api.Product{
+		Id:          1,
+		Name:        "Test Product",
+		Description: sql.NullString{Valid: false},
+		Price:       29.99,
+		Stock:       50,
+	}
+
+	result := product.MapProductToGetProductsResponse(p)
+
+	if result.Description != "" {
+		t.Errorf("Description = %q, want empty string for null", result.Description)
 	}
 }
 
@@ -74,9 +91,9 @@ func TestMapProductArrayToGetProductsResponse_Empty(t *testing.T) {
 
 func TestMapProductArrayToGetProductsResponse_Multiple(t *testing.T) {
 	products := []api.Product{
-		{Id: 1, Name: "Product A", Description: "Desc A", Price: 10.0, Stock: 5},
-		{Id: 2, Name: "Product B", Description: "Desc B", Price: 20.0, Stock: 10},
-		{Id: 3, Name: "Product C", Description: "Desc C", Price: 30.0, Stock: 15},
+		{Id: 1, Name: "Product A", Description: sql.NullString{String: "Desc A", Valid: true}, Price: 10.0, Stock: 5},
+		{Id: 2, Name: "Product B", Description: sql.NullString{String: "Desc B", Valid: true}, Price: 20.0, Stock: 10},
+		{Id: 3, Name: "Product C", Description: sql.NullString{String: "Desc C", Valid: true}, Price: 30.0, Stock: 15},
 	}
 
 	result := product.MapProductArrayToGetProductsResponse(products)
