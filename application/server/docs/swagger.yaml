@@ -102,19 +102,23 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new product in the shop catalog
+      description: Searches for products matching the given name
       parameters:
-      - description: Product to create
+      - description: Product name to search
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/api.CreateProductRequest'
+          $ref: '#/definitions/api.GetProductsRequest'
       produces:
       - application/json
       responses:
-        "201":
-          description: Product created
+        "200":
+          description: List of matching products
+          schema:
+            items:
+              $ref: '#/definitions/api.GetProductsResponse'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -133,7 +137,7 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Create a new product
+      summary: Get products by name
       tags:
       - products
   /products/{id}:
@@ -174,27 +178,23 @@ paths:
       summary: Get products by id
       tags:
       - products
-  /products/search:
+  /products/create:
     post:
       consumes:
       - application/json
-      description: Searches for products matching the given name
+      description: Creates a new product in the shop catalog
       parameters:
-      - description: Product name to search
+      - description: Product to create
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/api.GetProductsRequest'
+          $ref: '#/definitions/api.CreateProductRequest'
       produces:
       - application/json
       responses:
-        "200":
-          description: List of matching products
-          schema:
-            items:
-              $ref: '#/definitions/api.GetProductsResponse'
-            type: array
+        "201":
+          description: Product created
         "400":
           description: Bad Request
           schema:
@@ -213,7 +213,7 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Get products by name
+      summary: Create a new product
       tags:
       - products
   /user/info:
