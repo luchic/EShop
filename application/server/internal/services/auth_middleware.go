@@ -2,15 +2,21 @@ package services
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"shop/internal/api"
 	"shop/internal/auth"
 )
+
+const sessionKey string = "session"
 
 // Maybe I will change it in future
 func AuthIsReqiuered(
 	authService *auth.Service,
 	handler func(http.ResponseWriter, *http.Request,
-)) func(w http.ResponseWriter, r *http.Request) {
+	)) func(w http.ResponseWriter, r *http.Request) {
+
 	if handler == nil {
 		panic("No handler is provided")
 	}
@@ -27,7 +33,22 @@ func AuthIsReqiuered(
 		}
 
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, "session", session)
+		ctx = context.WithValue(ctx, sessionKey, session)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
+}
+
+func GetSessionDataFromContext(ctx context.Context) (api.SessionData, error) {
+	session := ctx.Value(sessionKey)
+
+	value, ok := session.(string)
+	if !ok {
+		return api.SessionData{}, fmt.Errorf("No session data in context")
+	}
+
+	var sessionData api.SessionData
+	if err := json.Unmarshal([]byte(value), &sessionData); err != nil {
+		return api.SessionData{}, err
+	}
+	return sessionData, nil
 }
