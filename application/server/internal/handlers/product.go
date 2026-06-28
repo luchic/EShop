@@ -35,10 +35,20 @@ func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http
 		return mux
 	}
 
-	mux.HandleFunc("POST /products/create", handler.handleCreateNewProduct)
-	mux.HandleFunc("POST /products", handler.handleCreateNewProduct)
-	mux.HandleFunc("GET /products/{id}", handler.handleGetProductById)
-	mux.HandleFunc("POST /products/search", handler.handleGetProductsByName)
+	handleCreateNewProduct := services.AuthIsReqiuered(
+		handler.auth,
+		handler.handleCreateNewProduct)
+	mux.HandleFunc("POST /products/create", handleCreateNewProduct)
+
+	handleGetProductById := services.AuthIsReqiuered(
+		handler.auth,
+		handler.handleGetProductById)
+	mux.HandleFunc("GET /products/{id}", handleGetProductById)
+
+	handleGetProductsByName := services.AuthIsReqiuered(
+		handler.auth,
+		handler.handleGetProductsByName)
+	mux.HandleFunc("POST /products/search", handleGetProductsByName)
 
 	return mux
 }
@@ -63,12 +73,6 @@ func (h *ProductHandler) handleCreateNewProduct(
 ) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
-	_, err := h.auth.ValidateSession(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -109,12 +113,6 @@ func (h *ProductHandler) handleCreateNewProduct(
 func (h *ProductHandler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
-	_, err := h.auth.ValidateSession(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -157,12 +155,6 @@ func (h *ProductHandler) handleGetProductsByName(w http.ResponseWriter, r *http.
 func (h *ProductHandler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
-	_, err := h.auth.ValidateSession(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
