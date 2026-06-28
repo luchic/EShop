@@ -10,7 +10,12 @@ func AuthIsReqiuered(
 	authService *auth.Service,
 	handler func(http.ResponseWriter, *http.Request,
 )) func(w http.ResponseWriter, r *http.Request) {
-
+	if handler == nil {
+		panic("No handler is provided")
+	}
+	if authService == nil {
+		panic("No auth service is provided")
+	}
 	next := http.HandlerFunc(handler)
 
 	return func(w http.ResponseWriter, r *http.Request) {
