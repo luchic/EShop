@@ -42,5 +42,12 @@ resource "docker_image" "migration" {
 }
 
 resource "docker_image" "server" {
-    name
+    name = "server:latest"
+    keep_locally = false
+
+    build {
+        context = "./application"
+        dockerfile = "DOckerfile"
+        tag = ["server:latest"]
+    } 
 }
