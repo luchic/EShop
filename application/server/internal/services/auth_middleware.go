@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"net/http"
 	"shop/internal/auth"
 )
@@ -19,12 +20,14 @@ func AuthIsReqiuered(
 	next := http.HandlerFunc(handler)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		_, err := authService.ValidateSession(r)
+		session, err := authService.ValidateSession(r)
 		if err != nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
-		next.ServeHTTP(w, r)
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, "session", session)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
