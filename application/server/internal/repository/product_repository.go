@@ -72,7 +72,7 @@ func (r PostgresProductRepository) GetProductsByName(name string) ([]api.Product
 	}
 
 	if err := rows.Err(); err != nil {
-		return products, nil
+		return products, err
 	}
 
 	return products, nil
