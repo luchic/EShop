@@ -11,7 +11,7 @@ import (
 const sessionKey string = "session"
 
 // Maybe I will change it in future
-func AuthIsReqiuered(
+func AuthIsRequired(
 	authService *auth.Service,
 	handler func(http.ResponseWriter, *http.Request,
 	)) func(w http.ResponseWriter, r *http.Request) {

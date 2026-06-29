@@ -35,17 +35,17 @@ func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http
 		return mux
 	}
 
-	handleCreateNewProduct := services.AuthIsReqiuered(
+	handleCreateNewProduct := services.AuthIsRequired(
 		handler.auth,
 		handler.handleCreateNewProduct)
 	mux.HandleFunc("POST /products/create", handleCreateNewProduct)
 
-	handleGetProductById := services.AuthIsReqiuered(
+	handleGetProductById := services.AuthIsRequired(
 		handler.auth,
 		handler.handleGetProductById)
 	mux.HandleFunc("GET /products/{id}", handleGetProductById)
 
-	handleGetProductsByName := services.AuthIsReqiuered(
+	handleGetProductsByName := services.AuthIsRequired(
 		handler.auth,
 		handler.handleGetProductsByName)
 	mux.HandleFunc("POST /products", handleGetProductsByName)

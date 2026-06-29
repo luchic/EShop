@@ -47,12 +47,12 @@ func main() {
 	userRepo := repository.NewPostgresUserRepository(db)
 	productRepo := repository.NewPostgresProductRepository(db)
 
-	defualtHandler := handlers.NewDefualtHandler()
+	DefaultHandler := handlers.NewDefaultHandler()
 	userHandler := handlers.NewUserHandler(logger, authService, userRepo)
 	productHandler := handlers.NewProductHandler(logger, authService, productRepo)
 
 	mux := http.NewServeMux()
-	defualtHandler.AddRouter(mux)
+	DefaultHandler.AddRouter(mux)
 	userHandler.AddUserHandlerRouter(mux)
 	productHandler.AddProductHandlerRouter(mux)
 
