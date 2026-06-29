@@ -38,17 +38,15 @@ Browser
 - [+] Clean up repo: remove old code, reset docker-compose from scratch
 - [+] Set up PostgreSQL with migrations (use `golang-migrate` or plain SQL files)
 - [+/-] Define DB schema: `users`, `products`, `orders`, `order_items`
-- [ ] Go project structure (`cmd/api`, `internal/`, `pkg/`)
-- [ ] Basic HTTP server with health check endpoint
 
 ### Phase 2 — Auth + Users
 - [+] User registration & login (bcrypt passwords)
 - [+] JWT or session-based auth stored in Redis
-- [ ] Middleware for protected routes
-
+- [+] Middleware for protected routes
+- [ ] Set permisions
 ### Phase 3 — Products
-- [ ] CRUD for products (admin only)
-- [ ] List/search products (public)
+- [+/-] CRUD for products (admin only)
+- [+/-] List/search products (public)
 - [ ] Cache product listings in Redis (TTL-based invalidation)
 
 ### Phase 4 — Shopping Cart
@@ -73,29 +71,6 @@ Browser
 - [ ] Structured logging (slog or zerolog)
 - [ ] Docker Compose wiring all services together
 - [ ] Basic Nginx config for routing
-
----
-
-## Project Layout (Go)
-
-```
-shop/
-├── cmd/
-│   ├── api/          # main.go — HTTP server entry point
-│   └── consumer/     # main.go — Kafka consumer entry point
-├── internal/
-│   ├── auth/         # JWT/session logic
-│   ├── cart/         # Redis cart
-│   ├── order/        # order domain logic + Kafka producer
-│   ├── product/      # product domain logic
-│   ├── user/         # user domain logic
-│   └── db/           # DB connection, migrations
-├── frontend/         # React app or plain HTML/JS
-├── migrations/       # SQL migration files
-├── docker-compose.yml
-├── nginx.conf
-└── Plan.md
-```
 
 ---
 

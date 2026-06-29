@@ -6,8 +6,41 @@ import (
 	"net/http"
 	"shop/internal/api"
 	"shop/internal/auth"
+	"shop/internal/repository"
 	"shop/internal/services"
 )
+
+type UserHandler struct {
+	logger     *slog.Logger
+	auth       *auth.Service
+	repository repository.UserRepository
+}
+
+func NewUserHandler(
+	logger *slog.Logger,
+	authService *auth.Service,
+	userRepo repository.UserRepository,
+) *UserHandler {
+	return &UserHandler{
+		logger:     logger,
+		auth:       authService,
+		repository: userRepo,
+	}
+}
+
+func (handler *UserHandler) AddUserHandlerRouter(mux *http.ServeMux) *http.ServeMux {
+	if mux == nil {
+		return mux
+	}
+
+	mux.HandleFunc("POST /user/register", handler.handleRegisterUser)
+	mux.HandleFunc("POST /user/login", handler.handleLoginUser)
+	mux.HandleFunc("POST /user/info", handler.handleGetUserByEmail)
+	mux.HandleFunc("GET /user/logout", handler.handleLogOut)
+	mux.HandleFunc("GET /user/me", handler.handleGetUserProfile)
+
+	return mux
+}
 
 // handleRegisterUser godoc
 // @Summary      Register a new user
@@ -18,7 +51,7 @@ import (
 // @Success      201
 // @Failure      400  {string}  string  "Bad request"
 // @Router       /user/register [post]
-func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	// I'm not realy sure, but this messages could be bad. It better use
 	// Some logging system to make it.
 	// I will just it leave. I want to reaturn nothing for now.
@@ -91,7 +124,7 @@ func (h *Handler) handleRegisterUser(w http.ResponseWriter, r *http.Request) {
 // @Failure      401   {string}  string  "Unauthorized"
 // @Failure      500   {string}  string  "Internal server error"
 // @Router       /user/login [post]
-func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
 	h.logger.Info("Start method handleLoginUser.", slog.String("request_id", requestId))
@@ -167,7 +200,7 @@ func (h *Handler) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 // @Failure      401   {string}  string  "Unauthorized"
 // @Failure      500   {string}  string  "Internal server error"
 // @Router       /user/logout [get]
-func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
 	h.logger.Info("Start method handleLogOut.", slog.String("request_id", requestId))
@@ -205,7 +238,7 @@ func (h *Handler) handleLogOut(w http.ResponseWriter, r *http.Request) {
 // @Failure      401   {string}  string  "Unauthorized"
 // @Failure      500   {string}  string  "Internal server error"
 // @Router       /user/info [post]
-func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
 	h.logger.Info("Start method handleGetUserByEmail.", slog.String("request_id", requestId))
@@ -239,6 +272,7 @@ func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 			slog.String("request_id", requestId),
 			slog.String("Error:", err.Error()))
 		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -255,7 +289,7 @@ func (h *Handler) handleGetUserByEmail(w http.ResponseWriter, r *http.Request) {
 // @Failure      400   {string}  string  "Bad request"
 // @Failure      500   {string}  string  "Internal server error"
 // @Router       /user/me [get]
-func (h *Handler) handleGetUserProfile(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) handleGetUserProfile(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
 	sessionData, err := h.auth.ValidateSession(r)

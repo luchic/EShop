@@ -14,7 +14,7 @@ services:
       shop-db:
         condition: service_healthy
 
-    restart: unless-stopped 
+    restart: unless-stopped
 
   shop-redis:
     image: redis:latest

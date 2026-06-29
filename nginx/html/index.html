@@ -51,6 +51,13 @@
     </div>
 
     <script>
+        (async function checkAlreadyLoggedIn() {
+            try {
+                const res = await fetch('/app/user/me', { credentials: 'include' });
+                if (res.ok) location.href = '/dashboard.html';
+            } catch {}
+        })();
+
         function showTab(tab) {
             document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('form').forEach(f => f.classList.remove('active'));
@@ -80,6 +87,7 @@
             try {
                 const res = await fetch('/app/user/login', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         email: document.getElementById('login-email').value,
@@ -101,6 +109,7 @@
             try {
                 const res = await fetch('/app/user/register', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         first_name: document.getElementById('reg-first').value,

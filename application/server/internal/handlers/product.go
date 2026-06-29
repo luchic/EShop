@@ -5,10 +5,53 @@ import (
 	"log/slog"
 	"net/http"
 	"shop/internal/api"
+	"shop/internal/auth"
 	"shop/internal/product"
+	"shop/internal/repository"
 	"shop/internal/services"
 	"strconv"
 )
+
+type ProductHandler struct {
+	logger     *slog.Logger
+	auth       *auth.Service
+	repository repository.ProductRepository
+}
+
+func NewProductHandler(
+	logger *slog.Logger,
+	authService *auth.Service,
+	productRepo repository.ProductRepository,
+) *ProductHandler {
+	return &ProductHandler{
+		logger:     logger,
+		auth:       authService,
+		repository: productRepo,
+	}
+}
+
+func (handler *ProductHandler) AddProductHandlerRouter(mux *http.ServeMux) *http.ServeMux {
+	if mux == nil {
+		return mux
+	}
+
+	handleCreateNewProduct := services.AuthIsRequired(
+		handler.auth,
+		handler.handleCreateNewProduct)
+	mux.HandleFunc("POST /products/create", handleCreateNewProduct)
+
+	handleGetProductById := services.AuthIsRequired(
+		handler.auth,
+		handler.handleGetProductById)
+	mux.HandleFunc("GET /products/{id}", handleGetProductById)
+
+	handleGetProductsByName := services.AuthIsRequired(
+		handler.auth,
+		handler.handleGetProductsByName)
+	mux.HandleFunc("POST /products", handleGetProductsByName)
+
+	return mux
+}
 
 // handleCreateNewProduct godoc
 // @Summary Create a new product
@@ -23,19 +66,13 @@ import (
 // @Failure 405 {string} string "Method not allowed"
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
-// @Router /products [post]
-func (h *Handler) handleCreateNewProduct(
+// @Router /products/create [post]
+func (h *ProductHandler) handleCreateNewProduct(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
-	_, err := h.auth.ValidateSession(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -47,7 +84,7 @@ func (h *Handler) handleCreateNewProduct(
 		return
 	}
 
-	product := product.MapCreatProductRequestToProduct(createProductRequest)
+	product := product.MapCreateProductRequestToProduct(createProductRequest)
 	if err := h.repository.CreateProduct(product); err != nil {
 		h.logger.Error(
 			"Couldn't create producgt",
@@ -72,16 +109,10 @@ func (h *Handler) handleCreateNewProduct(
 // @Failure 405 {string} string "Method not allowed"
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
-// @Router /products/search [post]
-func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
+// @Router /products [post]
+func (h *ProductHandler) handleGetProductsByName(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
-	_, err := h.auth.ValidateSession(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -121,15 +152,9 @@ func (h *Handler) handleGetProductsByName(w http.ResponseWriter, r *http.Request
 // @Failure 500 {string} string "Internal Error"
 // @Security ApiKeyAuth
 // @Router /products/{id} [get]
-func (h *Handler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) handleGetProductById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	requestId := services.GetRequestId(ctx)
-	_, err := h.auth.ValidateSession(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
