@@ -84,7 +84,7 @@ func (h *ProductHandler) handleCreateNewProduct(
 		return
 	}
 
-	product := product.MapCreatProductRequestToProduct(createProductRequest)
+	product := product.MapCreateProductRequestToProduct(createProductRequest)
 	if err := h.repository.CreateProduct(product); err != nil {
 		h.logger.Error(
 			"Couldn't create producgt",
