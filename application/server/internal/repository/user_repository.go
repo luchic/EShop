@@ -43,7 +43,6 @@ func (r PostgresUserRepository) GetUserByEmail(userEmail string) (api.User, erro
 	)
 
 	if err != nil {
-		fmt.Println(err)
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("GetUserByEmail %s: no such user", userEmail)
 		}
@@ -68,7 +67,6 @@ func (r PostgresUserRepository) GetUserById(userId int64) (api.User, error) {
 	)
 
 	if err != nil {
-		fmt.Println(err)
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("GetUserById %d: no such user", userId)
 		}
