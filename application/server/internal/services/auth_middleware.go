@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"shop/internal/api"
@@ -41,14 +40,9 @@ func AuthIsReqiuered(
 func GetSessionDataFromContext(ctx context.Context) (api.SessionData, error) {
 	session := ctx.Value(sessionKey)
 
-	value, ok := session.(string)
+	value, ok := session.(api.SessionData)
 	if !ok {
 		return api.SessionData{}, fmt.Errorf("No session data in context")
 	}
-
-	var sessionData api.SessionData
-	if err := json.Unmarshal([]byte(value), &sessionData); err != nil {
-		return api.SessionData{}, err
-	}
-	return sessionData, nil
+	return value, nil
 }
