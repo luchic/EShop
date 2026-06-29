@@ -272,6 +272,7 @@ func (h *UserHandler) handleGetUserByEmail(w http.ResponseWriter, r *http.Reques
 			slog.String("request_id", requestId),
 			slog.String("Error:", err.Error()))
 		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
